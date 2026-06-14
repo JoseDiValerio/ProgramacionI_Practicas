@@ -65,11 +65,11 @@ while (!exit) {
         // SEGUIR AGREGANDO NUMEROS
         while (true) {
             Console.Write("\nDo you want to add another number? (Y/N): ");
-            answer = Console.ReadLine().ToUpper();
+            answer = (Console.ReadLine() ?? "").ToUpper();
 
             while (answer != "Y" && answer != "N") {
                 Console.Write("\nInvalid option. Enter Y or N: ");
-                answer = Console.ReadLine().ToUpper();
+                answer = (Console.ReadLine()??"").ToUpper();
             }
 
             if (answer == "N") {
@@ -180,11 +180,11 @@ while (!exit) {
     if (!exit) {
 
         Console.Write("\nDo you wish to perform another operation? Y/N: ");    
-        string opcion2 = Console.ReadLine().ToUpper();
+        string opcion2 = (Console.ReadLine()??"").ToUpper();
 
         while (opcion2 != "Y" && opcion2 != "N") {
             Console.Write("\nInvalid option! Enter Y or N: ");
-            opcion2 = Console.ReadLine().ToUpper();
+            opcion2 = (Console.ReadLine()??"").ToUpper();
         }
 
         if (opcion2 == "N") {
