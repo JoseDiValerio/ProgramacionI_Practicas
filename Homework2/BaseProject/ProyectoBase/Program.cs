@@ -1,5 +1,6 @@
 ﻿// PROYECTO RESERVA DE AULAS
 // Jose Daniel Di Valerio 2025-1887
+
 class Aula
 {
     public int Id;
