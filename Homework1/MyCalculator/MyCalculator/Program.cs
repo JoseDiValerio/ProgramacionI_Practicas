@@ -37,9 +37,14 @@ class MyCalculator {
                 // PRIMER NUMERO
                 Console.Write("\nEnter first number: ");
 
-                while (!double.TryParse(Console.ReadLine(), out number))
-                {
-                    Console.Write("\nInvalid number! Please try again: ");
+                while (true) {
+                    try {
+                        number = Convert.ToDouble(Console.ReadLine());
+                        break;
+                    }
+                    catch {
+                        Console.Write("\nInvalid number! Please try again: ");
+                    }
                 }
 
                 numbers.Add(number);
@@ -47,9 +52,14 @@ class MyCalculator {
                 // SEGUNDO NUMERO
                 Console.Write("\nEnter second number: ");
 
-                while (!double.TryParse(Console.ReadLine(), out number))
-                {
-                    Console.Write("\nInvalid number! Please try again: ");
+                while (true) {
+                    try {
+                        number = Convert.ToDouble(Console.ReadLine());
+                        break;
+                    }
+                    catch {
+                        Console.Write("\nInvalid number! Please try again: ");
+                    }
                 }
 
                 numbers.Add(number);
