@@ -181,7 +181,7 @@ class MyCalculator {
 
             if (!exit) {
 
-                Console.WriteLine("\nDo you wish to perform another operation? Y/N: ");    
+                Console.Write("\nDo you wish to perform another operation? Y/N: ");    
                 string opcion2 = Console.ReadLine().ToUpper();
 
                 while (opcion2 != "Y" && opcion2 != "N") {
