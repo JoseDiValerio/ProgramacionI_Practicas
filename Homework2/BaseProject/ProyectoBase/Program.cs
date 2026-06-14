@@ -1,29 +1,6 @@
 ﻿// PROYECTO RESERVA DE AULAS
 // Jose Daniel Di Valerio 2025-1887
 
-class Aula
-{
-    public int Id;
-    public string Nombre;
-    public int Capacidad;
-}
-
-class Profesor
-{
-    public int Id;
-    public string Nombre;
-}
-
-class Reserva
-{
-    public int Id;
-    public Aula Aula;
-    public Profesor Profesor;
-    public string Dia;
-    public int HoraInicio;
-    public int HoraFin;
-}
-
 List<Aula> aulas = new List<Aula>();
 List<Profesor> profesores = new List<Profesor>();
 List<Reserva> reservas = new List<Reserva>();
@@ -47,7 +24,11 @@ while (!salir) {
         Console.WriteLine("6. Salir");
         Console.Write("\nSeleccione una opción: ");
 
-        opcion = int.Parse(Console.ReadLine());
+        //opcion = int.Parse(Console.ReadLine());
+
+        while (!int.TryParse(Console.ReadLine(), out opcion) || opcion < 1 || opcion > 6) {
+            Console.Write("\nOpción inválida! Seleccione una opción del 1 al 6: ");
+        }
 
         switch (opcion) {
 
@@ -189,7 +170,7 @@ while (!salir) {
             case 5:
                 Console.WriteLine("\n--- MODIFICAR HORARIO ---");
 
-                Console.Write("Ingrese ID de la reserva: ");
+                Console.Write("\nIngrese ID de la reserva: ");
                 int idReserva = int.Parse(Console.ReadLine());
 
                 Reserva reservaModificar = null;
@@ -201,21 +182,21 @@ while (!salir) {
                 }
 
                 if (reservaModificar == null) {
-                    Console.WriteLine("Reserva no encontrada.");
+                    Console.WriteLine("\nReserva no encontrada.");
                     break;
                 }
 
-                Console.Write("Nuevo día: ");
+                Console.Write("\nNuevo día: ");
                 string nuevoDia = Console.ReadLine();
 
-                Console.Write("Nueva hora inicio: ");
+                Console.Write("\nNueva hora inicio: ");
                 int nuevaHoraInicio = int.Parse(Console.ReadLine());
 
-                Console.Write("Nueva hora fin: ");
+                Console.Write("vNueva hora fin: ");
                 int nuevaHoraFin = int.Parse(Console.ReadLine());
 
                 if (nuevaHoraInicio >= nuevaHoraFin) {
-                    Console.WriteLine("La hora de inicio debe ser menor que la hora final.");
+                    Console.WriteLine("\nLa hora de inicio debe ser menor que la hora final.");
                     break;
                 }
 
@@ -236,33 +217,56 @@ while (!salir) {
                 }
 
                 if (!nuevoDisponible) {
-                    Console.WriteLine("No se puede modificar. Ya existe una reserva en ese horario.");
+                    Console.WriteLine("\nNo se puede modificar. Ya existe una reserva en ese horario.");
                 } else {
                     reservaModificar.Dia = nuevoDia;
                     reservaModificar.HoraInicio = nuevaHoraInicio;
                     reservaModificar.HoraFin = nuevaHoraFin;
 
-                    Console.WriteLine("Horario modificado correctamente.");
+                    Console.WriteLine("\nHorario modificado correctamente.");
                 }
                 break;
 
             case 6:
                 salir = true;
-                Console.WriteLine("Saliendo del sistema...");
+                Console.WriteLine("\nSaliendo del sistema.");
                 break;
 
             default:
-                Console.WriteLine("Opción inválida.");
+                Console.WriteLine("\nOpción inválida.");
                 break;
         }
     }
     
     catch {
-        Console.WriteLine("ERROR: Entrada inválida. Intente nuevamente.");
+        Console.WriteLine("\nERROR: Entrada inválida! Intente nuevamente.");
     }
 
     if (!salir) {
         Console.WriteLine("\nPresione una tecla para continuar...");
         Console.ReadKey();
     }
+}
+
+class Aula
+{
+    public int Id;
+    public string Nombre;
+    public int Capacidad;
+}
+
+class Profesor
+{
+    public int Id;
+    public string Nombre;
+}
+
+class Reserva
+{
+    public int Id;
+    public Aula Aula;
+    public Profesor Profesor;
+    public string Dia;
+    public int HoraInicio;
+    public int HoraFin;
 }
