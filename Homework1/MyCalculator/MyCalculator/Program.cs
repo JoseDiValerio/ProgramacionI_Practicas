@@ -16,6 +16,7 @@ class MyCalculator {
 
             Console.Clear();
 
+            // JOSE DANIEL DI VALERIO 2025-1887
             Console.WriteLine("\n===== JOSE DI VALERIO 2025-1887 =====");
 
             Console.WriteLine("\n===== MY CALCULATOR =====");
@@ -29,7 +30,7 @@ class MyCalculator {
 
             int.TryParse(Console.ReadLine(), out option);
 
-            // INGRESOS DE LOS NUMEROS
+            // INGRESO DE LOS NUMEROS
 
             if (option >= 1 && option <= 4) {
                 numbers.Clear();
