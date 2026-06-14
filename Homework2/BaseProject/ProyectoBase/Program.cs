@@ -24,8 +24,6 @@ while (!salir) {
         Console.WriteLine("6. Salir");
         Console.Write("\nSeleccione una opción: ");
 
-        //opcion = int.Parse(Console.ReadLine());
-
         while (!int.TryParse(Console.ReadLine(), out opcion) || opcion < 1 || opcion > 6) {
             Console.Write("\nOpción inválida! Seleccione una opción del 1 al 6: ");
         }
