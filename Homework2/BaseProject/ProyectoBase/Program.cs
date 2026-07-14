@@ -1,6 +1,7 @@
 ﻿// PROYECTO RESERVA DE AULAS
 // Jose Daniel Di Valerio
 // Matricula 2025-1887
+// Hola mundo
 
 List<Aula> aulas = new List<Aula>();
 List<Profesor> profesores = new List<Profesor>();
