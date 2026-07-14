@@ -180,7 +180,7 @@ while (!salir) {
                 Console.WriteLine("\n--- MODIFICAR HORARIO ---");
 
                 Console.Write("\nIngrese ID de la reserva: ");
-                int idReserva = int.Parse(Console.ReadLine());
+                int idReserva = int.Parse(Console.ReadLine()??"");
 
                 Reserva reservaModificar = null;
 
