@@ -3,7 +3,7 @@
 
 List<Aula> aulas = new List<Aula>();
 List<Profesor> profesores = new List<Profesor>();
-List<Reserva> reservas = new List<Reserva>();
+List<Reserva> reserva = new List<Reserva>();
 
 int opcion = 0;
 int contadorReserva = 1;
@@ -16,12 +16,14 @@ while (!salir) {
 
         Console.WriteLine("===== JOSE DI VALERIO 2025-1887 =====");
         Console.WriteLine("\n===== SISTEMA DE RESERVAS DE AULAS =====");
-        Console.WriteLine("\n1. Registrar aula");
-        Console.WriteLine("2. Registrar profesor");
-        Console.WriteLine("3. Crear reserva");
-        Console.WriteLine("4. Listar reservas");
-        Console.WriteLine("5. Modificar horario de reserva");
-        Console.WriteLine("6. Salir");
+        Console.WriteLine("\n1. Registrar aulas");
+        Console.WriteLine("2. Ver aulas registradas");
+        Console.WriteLine("3. Registrar profesores");
+        Console.WriteLine("4. Ver profesores registrados");
+        Console.WriteLine("5. Crear reserva");
+        Console.WriteLine("6. Listar reservas");
+        Console.WriteLine("7. Modificar horario de reserva");
+        Console.WriteLine("8. Salir");
         Console.Write("\nSeleccione una opción: ");
 
         while (!int.TryParse(Console.ReadLine(), out opcion) || opcion < 1 || opcion > 6) {
@@ -34,15 +36,15 @@ while (!salir) {
                 Aula aula = new Aula();
 
                 Console.Write("\nID del aula: ");
-                aula.Id = int.Parse(Console.ReadLine());
+                aula.Id = Convert.ToInt32(Console.ReadLine());
 
                 Console.Write("Nombre del aula: ");
                 aula.Nombre = Console.ReadLine();
 
                 Console.Write("Capacidad: ");
-                aula.Capacidad = int.Parse(Console.ReadLine());
+                aula.Capacidad = Convert.ToInt32(Console.ReadLine());
 
-                aulas.Add(aula);
+                
 
                 Console.WriteLine("Aula registrada correctamente.");
                 break;
