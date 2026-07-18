@@ -102,7 +102,7 @@ while (!salir) {
 
             case 5:
 
-                if (aulas.Count == 0 || profesores.Count == 0) {
+                if (aulas.Count == 0 && profesores.Count == 0) {
                     Console.WriteLine("\nDebe registrar aulas y profesores primero.");
                     break;
                 } else if (aulas.Count == 0) {
@@ -110,6 +110,7 @@ while (!salir) {
                     break;
                 } else if (profesores.Count == 0) {
                     Console.WriteLine("\nDebe registrar un profesor");
+                    break;
                 }
 
                 Console.WriteLine("\n--- CREAR RESERVA ---");
@@ -125,10 +126,7 @@ while (!salir) {
 
                 int idAula2;
 
-                if (int.TryParse(idAula, out idAula2)) {
-                    Console.WriteLine($"ID ingresado: {idAula2}");
-
-                } else {
+                if (!int.TryParse(idAula, out idAula2)) {
                     Console.WriteLine("Debe ingresar un numero");
                 }
 
