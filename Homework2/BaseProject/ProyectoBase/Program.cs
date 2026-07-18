@@ -193,6 +193,7 @@ while (!salir) {
 
                     if (mismoDia && choqueHorario && (mismaAula || mismoProfesor)) {
                         disponible = false;
+                        break;
                     }
                 }
 
@@ -239,20 +240,81 @@ while (!salir) {
 
             case 7:
 
-                Console.WriteLine("\n--- LISTADO DE RESERVAS ---");
+                Console.WriteLine("\n--- RESERVAS REGISTRADAS ---");
 
                 if (reserva.Count == 0) {
                     Console.WriteLine("\nNo hay reservas registradas.");
-                } else {
+                    break;
+                }
                     
-                    foreach (Reserva r in reserva) {
+                foreach (Reserva r in reserva) {
                         
                         Console.WriteLine("\nID Reserva: " + r.Id);
                         Console.WriteLine("Aula: " + r.Aula.Nombre);
                         Console.WriteLine("Profesor: " + r.Profesor.Nombre);
                         Console.WriteLine("Día: " + r.Dia);
                         Console.WriteLine("Horario: " + r.HoraInicio + ":00 - " + r.HoraFin + ":00");
+                }
+
+                Console.Write("\nIngrese el ID de la reserva a modificar: ");
+                int idReserva = int.Parse(Console.ReadLine() ?? "");
+
+                Reserva reservaModificar = null;
+
+                foreach (Reserva r in reserva) {
+                    
+                    if (r.Id == idReserva) {
+                        reservaModificar = r;
+                        break;
                     }
+                }
+
+                if (reservaModificar == null) {
+                    Console.WriteLine("\nReserva no encontrada.");
+                    break;
+                }
+
+                Console.Write("\nNuevo día: ");
+                string nuevoDia = Console.ReadLine() ?? "";
+
+                Console.Write("Nueva hora inicio: ");
+                int nuevaHoraInicio = int.Parse(Console.ReadLine() ?? "");
+
+                Console.Write("Nueva hora fin: ");
+                int nuevaHoraFin = int.Parse(Console.ReadLine() ?? "");
+
+                if (nuevaHoraInicio >= nuevaHoraFin) {
+                    Console.WriteLine("\nLa hora de inicio debe ser menor que la hora final.");
+                    break;
+                }
+
+                bool disponible2 = true;
+
+                foreach (Reserva r in reserva) {
+
+                    if (r.Id != reservaModificar.Id) {
+                        
+                        bool mismoDia = r.Dia.ToLower() == nuevoDia.ToLower();
+                        bool mismaAula = r.Aula.Id == reservaModificar.Aula.Id;
+                        bool mismoProfesor = r.Profesor.Id == reservaModificar.Profesor.Id;
+                        bool choqueHorario = nuevaHoraInicio < r.HoraFin && nuevaHoraFin > r.HoraInicio;
+
+                        if (mismoDia && choqueHorario && (mismaAula || mismoProfesor)) {
+                            disponible2 = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (!disponible2) {
+                    Console.WriteLine("\nNo se puede modificar la reserva porque existe un conflicto de horario.");
+                } else {
+                    
+                    reservaModificar.Dia = nuevoDia;
+                    reservaModificar.HoraInicio = nuevaHoraInicio;
+                    reservaModificar.HoraFin = nuevaHoraFin;
+
+                    Console.WriteLine("\nReserva modificada correctamente.");
                 }
 
                 break;
