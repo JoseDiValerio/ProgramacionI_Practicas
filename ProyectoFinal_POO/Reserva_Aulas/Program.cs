@@ -19,12 +19,11 @@ do {
     Console.WriteLine("\n========================================");
     Console.Write("\nSeleccione una opción: ");
 
-    while (!int.TryParse(Console.ReadLine(), out opcion)) {
-        Console.Write("Opción inválida. Intente nuevamente: ");
+    while (!int.TryParse(Console.ReadLine(), out opcion) || opcion < 1 || opcion > 4) {
+        Console.Write("\nOpción inválida. Intente nuevamente: ");
     }
 
-    switch (opcion)
-    {
+    switch (opcion) {
         case 1:
             MenuAulas(sistema);
             break;
@@ -40,17 +39,11 @@ do {
         case 4:
             Console.WriteLine("\nGracias por utilizar el sistema.");
             break;
-
-        default:
-            Console.WriteLine("\nOpción incorrecta.");
-            Console.ReadKey();
-            break;
     }
-
 } while (opcion != 4);
 
 static void MenuAulas(ReservaAulas sistema) {
-    
+
     int opcion;
 
     do {
@@ -64,13 +57,12 @@ static void MenuAulas(ReservaAulas sistema) {
 
         Console.Write("\nSeleccione una opción: ");
 
-        while (!int.TryParse(Console.ReadLine(), out opcion))
-        {
-            Console.Write("Opción inválida. Intente nuevamente: ");
+        while (!int.TryParse(Console.ReadLine(), out opcion) || opcion < 1 || opcion > 4) {
+            Console.Write("\nOpción inválida. Intente nuevamente: ");
         }
 
-        switch (opcion)
-        {
+        switch (opcion) {
+            
             case 1:
                 sistema.RegistrarAula();
                 break;
@@ -82,24 +74,9 @@ static void MenuAulas(ReservaAulas sistema) {
             case 3:
                 sistema.ListarAulas();
                 break;
-
-            case 4:
-                break;
-
-            default:
-                Console.WriteLine("Opción incorrecta.");
-                break;
         }
-
-        if (opcion != 4)
-        {
-            Console.WriteLine("\nPresione una tecla para continuar...");
-            Console.ReadKey();
-        }
-
     } while (opcion != 4);
 }
-
 static void MenuProfesores(ReservaAulas sistema) {
     
     int opcion;
@@ -115,12 +92,12 @@ static void MenuProfesores(ReservaAulas sistema) {
 
         Console.Write("\nSeleccione una opción: ");
 
-        while (!int.TryParse(Console.ReadLine(), out opcion)) {
-            Console.Write("Opción inválida. Intente nuevamente: ");
+        while (!int.TryParse(Console.ReadLine(), out opcion) || opcion < 1 || opcion > 4) {
+            Console.Write("\nOpción inválida. Intente nuevamente: ");
         }
 
         switch (opcion) {
-            
+
             case 1:
                 sistema.RegistrarProfesor();
                 break;
@@ -132,42 +109,26 @@ static void MenuProfesores(ReservaAulas sistema) {
             case 3:
                 sistema.ListarProfesores();
                 break;
-
-            case 4:
-                break;
-
-            default:
-                Console.WriteLine("Opción incorrecta.");
-                break;
         }
-
-        if (opcion != 4) {
-            Console.WriteLine("\nPresione una tecla para continuar...");
-            Console.ReadKey();
-        }
-
     } while (opcion != 4);
 }
-
 static void MenuReservas(ReservaAulas sistema) {
     
     int opcion;
 
     do {
-        
         Console.Clear();
 
         Console.WriteLine("======== GESTIÓN DE RESERVAS ========");
-        Console.WriteLine("1. Registrar Reserva");
-        Console.WriteLine("2. Editar Reserva");
-        Console.WriteLine("3. Listar Reservas");
-        Console.WriteLine("4. Volver");
+        Console.WriteLine("\n\t1. Registrar Reserva");
+        Console.WriteLine("\t2. Editar Reserva");
+        Console.WriteLine("\t3. Listar Reservas");
+        Console.WriteLine("\t4. Volver");
 
-        Console.Write("Seleccione una opción: ");
+        Console.Write("\nSeleccione una opción: ");
 
-        while (!int.TryParse(Console.ReadLine(), out opcion))
-        {
-            Console.Write("Opción inválida. Intente nuevamente: ");
+        while (!int.TryParse(Console.ReadLine(), out opcion) || opcion < 1 || opcion > 4) {
+            Console.Write("\nOpción inválida. Intente nuevamente: ");
         }
 
         switch (opcion) {
@@ -183,20 +144,6 @@ static void MenuReservas(ReservaAulas sistema) {
             case 3:
                 sistema.ListarReservas();
                 break;
-
-            case 4:
-                break;
-
-            default:
-                Console.WriteLine("Opción incorrecta.");
-                break;
         }
-
-        if (opcion != 4) {
-            Console.WriteLine("\nPresione una tecla para continuar...");
-            Console.ReadKey();
-        }
-
     } while (opcion != 4);
 }
-

@@ -1,13 +1,13 @@
-﻿namespace Reserva_Aulas
-{
-    public class ReservaAulas
-    {
+﻿namespace Reserva_Aulas {
+    public class ReservaAulas {
 
         private List<Aula> aulas = new List<Aula>();
         private List<Profesor> profesores = new List<Profesor>();
         private List<Reserva> reservas = new List<Reserva>();
 
+        // Metodos de validacion
         private string LeerNombre(string mensaje) {
+            
             string dato;
 
             do {
@@ -24,6 +24,68 @@
             return dato;
         }
 
+        private int LeerNumero(string mensaje) {
+            
+            int numero;
+
+            Console.Write(mensaje);
+
+            while (!int.TryParse(Console.ReadLine(), out numero) || numero <= 0) {
+                Console.Write("\nIngrese numero entero mayor que 0: ");
+            }
+
+            return numero;
+        }
+
+        private bool ExisteCodigoAulaAgregar(string codigo) {
+
+            foreach (Aula aulas in aulas) {
+                
+                if (aulas.Codigo == codigo) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool ExisteCodigoAulaEditar(string codigo, Aula aulaActual) {
+
+            foreach (Aula aula in aulas) {
+                
+                if (aula != aulaActual && aula.Codigo == codigo) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool ExisteCodigoProfesorAgregar(string codigo) {
+
+            foreach (Profesor profesores in profesores) {
+
+                if (profesores.Codigo == codigo) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool ExisteCodigoProfesorEditar(string codigo, Profesor profesorActual) {
+
+            foreach (Profesor profesores in profesores) {
+
+                if (profesores != profesorActual && profesores.Codigo == codigo) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // Funciones principales
         public void RegistrarAula() {
             
             Console.Clear();
@@ -34,44 +96,25 @@
             Console.WriteLine("===== REGISTRAR AULA =====");
 
             do {
-                Console.Write("\nCódigo: ");
+                Console.Write("\nCodigo: ");
                 codigo = Console.ReadLine() ?? "";
 
-                if (codigo == "") {
-                    Console.WriteLine("Debe ingresar un código.");
+                if (ExisteCodigoAulaAgregar(codigo)) {
+                    Console.WriteLine("\nCodigo ya existe.");
                 }
 
-                foreach (Aula aula in aulas) {
-                    
-                    if (aula.Codigo == codigo) {
-                        
-                        Console.WriteLine("Ese código ya existe.");
-                        return;
-                    }
-                }
+            } while (ExisteCodigoAulaAgregar(codigo));
 
-            } while (codigo == "");
+            nombre = LeerNombre("\nNombre: ");
 
-            nombre = LeerNombre("Nombre: ");
-
-            do {
-                Console.Write("Capacidad (estudiantes): ");
-
-                while (!int.TryParse(Console.ReadLine(), out capacidad)) {
-                    Console.Write("Debe ingresar un número: ");
-                }
-
-                if (capacidad <= 0) {
-                    Console.WriteLine("La capacidad debe ser mayor que cero.");
-                }
-
-            } while (capacidad <= 0);
+            capacidad = LeerNumero("\nCapacidad (estudiantes): ");
 
             Aula nuevaAula = new Aula(codigo, nombre, capacidad);
 
             aulas.Add(nuevaAula);
 
             Console.WriteLine("\nAula registrada correctamente.");
+            Console.ReadKey();
         }
 
         public void EditarAula() {
@@ -82,6 +125,7 @@
 
             if (aulas.Count == 0) {
                 Console.WriteLine("\nNo hay aulas registradas.");
+                Console.ReadKey();
                 return;
             }
 
@@ -95,13 +139,8 @@
 
             Console.Write("\nSeleccione el número del aula: ");
 
-            while (!int.TryParse(Console.ReadLine(), out opcion)) {
-                Console.Write("Debe ingresar un número: ");
-            }
-
-            if (opcion < 1 || opcion > aulas.Count) {
-                Console.WriteLine("Opción inválida.");
-                return;
+            while (!int.TryParse(Console.ReadLine(), out opcion) || opcion < 1 || opcion > aulas.Count) {
+                Console.Write("\nOpcion invalida. Intente nuevamente: ");
             }
 
             Aula aula = aulas[opcion - 1];
@@ -113,32 +152,22 @@
                 Console.Write("\nNuevo código: ");
                 codigo = Console.ReadLine() ?? "";
 
-                if (codigo == "") {
-                    Console.WriteLine("Debe ingresar un código.");
+                if (ExisteCodigoAulaEditar(codigo, aula)) {
+                    Console.WriteLine("Codigo ya existe.");
                 }
 
-            } while (codigo == "");
-            
+            } while (ExisteCodigoAulaEditar(codigo, aula));
+
             nombre = LeerNombre("Nombre: ");
 
-            do {
-                Console.Write("Nueva capacidad: ");
-
-                while (!int.TryParse(Console.ReadLine(), out capacidad)) {
-                    Console.Write("Debe ingresar un número: ");
-                }
-
-                if (capacidad <= 0) {
-                    Console.WriteLine("La capacidad debe ser mayor que cero.");
-                }
-
-            } while (capacidad <= 0);
+            capacidad = LeerNumero("Capacidad (estudiantes): ");
 
             aula.Codigo = codigo;
             aula.Nombre = nombre;
             aula.Capacidad = capacidad;
 
             Console.WriteLine("\nAula editada correctamente.");
+            Console.ReadKey();
         }
 
         public void ListarAulas() {
@@ -149,6 +178,7 @@
 
             if (aulas.Count == 0) {
                 Console.WriteLine("\nNo hay aulas registradas.");
+                Console.ReadKey();
                 return;
             }
 
@@ -159,6 +189,8 @@
                 Console.WriteLine("Nombre: " + aulas[i].Nombre);
                 Console.WriteLine("Capacidad (estudiantes): " + aulas[i].Capacidad);
             }
+
+            Console.ReadKey();
         }
 
         public void RegistrarProfesor()
@@ -171,23 +203,23 @@
             string materia;
 
             do {
-                Console.Write("\nCódigo: ");
+                Console.Write("\nCodigo: ");
                 codigo = Console.ReadLine() ?? "";
 
-                if (codigo == "") {
-                    Console.WriteLine("Debe ingresar un código.");
+                if (ExisteCodigoProfesorAgregar(codigo)) {
+                    Console.WriteLine("\nCodigo ya existe.");
                 }
 
-            } while (codigo == "");
+            } while (ExisteCodigoProfesorAgregar(codigo));
 
-            nombre = LeerNombre("Nombre: ");
+            nombre = LeerNombre("\nNombre: ");
 
             do {
-                Console.Write("Materia: ");
+                Console.Write("\nMateria: ");
                 materia = Console.ReadLine() ?? "";
 
                 if (materia == "") {
-                    Console.WriteLine("Debe ingresar una asignatura.");
+                    Console.WriteLine("Debe ingresar una materia.");
                 }
 
             } while (materia == "");
@@ -197,6 +229,7 @@
             profesores.Add(nuevoProfesor);
 
             Console.WriteLine("\nProfesor registrado correctamente.");
+            Console.ReadKey();
         }
 
         public void EditarProfesor() {
@@ -207,6 +240,7 @@
 
             if (profesores.Count == 0) {
                 Console.WriteLine("\nNo hay profesores registrados.");
+                Console.ReadKey();
                 return;
             }
 
@@ -219,13 +253,8 @@
 
             Console.Write("\nSeleccione el profesor: ");
 
-            while (!int.TryParse(Console.ReadLine(), out opcion)) {
-                Console.Write("Debe ingresar un número: ");
-            }
-
-            if (opcion < 1 || opcion > profesores.Count) {
-                Console.WriteLine("Opción inválida.");
-                return;
+            while (!int.TryParse(Console.ReadLine(), out opcion) || opcion < 1 || opcion > profesores.Count) {
+                Console.Write("\nOpcion invalida. Intente nuevamente: ");
             }
 
             Profesor profesor = profesores[opcion - 1];
@@ -237,20 +266,20 @@
                 Console.Write("\nNuevo código: ");
                 codigo = Console.ReadLine() ?? "";
 
-                if (codigo == "") {
-                    Console.WriteLine("Debe ingresar un código.");
+                if (ExisteCodigoProfesorEditar(codigo, profesor)) {
+                    Console.WriteLine("\nCodigo ya existe.");
                 }
 
-            } while (codigo == "");
+            } while (ExisteCodigoProfesorEditar(codigo, profesor));
 
-            nombre = LeerNombre("Nombre: ");
+            nombre = LeerNombre("\nNombre: ");
 
             do {
-                Console.Write("Nueva materia: ");
+                Console.Write("\nNueva materia: ");
                 materia = Console.ReadLine() ?? "";
 
                 if (materia == "") {
-                    Console.WriteLine("Debe ingresar una asignatura.");
+                    Console.WriteLine("Debe ingresar una materia.");
                 }
 
             } while (materia == "");
@@ -260,6 +289,7 @@
             profesor.Materia = materia;
 
             Console.WriteLine("\nProfesor actualizado correctamente.");
+            Console.ReadKey();
         }
 
         public void ListarProfesores() {
@@ -270,6 +300,7 @@
 
             if (profesores.Count == 0) {
                 Console.WriteLine("\nNo hay profesores registrados.");
+                Console.ReadKey();
                 return;
             }
 
@@ -278,8 +309,10 @@
                 Console.WriteLine("\nProfesor #" + (i + 1));
                 Console.WriteLine("\nCódigo: " + profesores[i].Codigo);
                 Console.WriteLine("Nombre: " + profesores[i].Nombre);
-                Console.WriteLine("Asignatura: " + profesores[i].Materia);
+                Console.WriteLine("Materia: " + profesores[i].Materia);
             }
+
+            Console.ReadKey();
         }
 
         public void RegistrarReserva() {
@@ -288,72 +321,54 @@
 
             Console.WriteLine("===== REGISTRAR RESERVA =====");
 
-            if (aulas.Count == 0) {
-                Console.WriteLine("Debe registrar al menos un aula.");
+            if (aulas.Count == 0 && profesores.Count == 0) {
+                Console.WriteLine("\nDebe registrar al menos un aula y un profesor.");
+                Console.ReadKey();
+                return;
+
+            } else if (aulas.Count == 0) {
+                Console.WriteLine("\nDebe registrar al menos un aula.");
+                Console.ReadKey();
+                return;
+
+            } else if (profesores.Count == 0) {
+                Console.WriteLine("\nDebe registrar al menos un profesor.");
+                Console.ReadKey();
                 return;
             }
 
-            if (profesores.Count == 0) {
-                Console.WriteLine("Debe registrar al menos un profesor.");
-                return;
-            }
-
-            Console.WriteLine("\nAULAS DISPONIBLES");
+            Console.WriteLine("\nAULAS DISPONIBLES\n");
 
             for (int i = 0; i < aulas.Count; i++) {
-                Console.WriteLine((i + 1) + ". " + aulas[i].Nombre);
+                Console.WriteLine((i + 1) + ". " + aulas[i].Nombre + " (" + aulas[i].Codigo + ")");
             }
 
             int opcionAula;
 
             Console.Write("\nSeleccione un aula: ");
 
-            while (!int.TryParse(Console.ReadLine(), out opcionAula)) {
-                Console.Write("Debe ingresar un número: ");
+            while (!int.TryParse(Console.ReadLine(), out opcionAula) || opcionAula < 1 || opcionAula > aulas.Count) {
+                Console.Write("\nSeleccione aula correcta: ");
             }
 
-            if (opcionAula < 1 || opcionAula > aulas.Count) {
-                Console.WriteLine("Opción inválida.");
-                return;
-            }
-
-            Console.WriteLine();
-
-            Console.WriteLine("PROFESORES");
+            Console.WriteLine("\nPROFESORES DISPONIBLES\n");
 
             for (int i = 0; i < profesores.Count; i++) {
-                Console.WriteLine((i + 1) + ". " + profesores[i].Nombre);
+                Console.WriteLine((i + 1) + ". " + profesores[i].Nombre + " - " + "Materia: " + profesores[i].Materia);
             }
 
             int opcionProfesor;
 
             Console.Write("\nSeleccione un profesor: ");
 
-            while (!int.TryParse(Console.ReadLine(), out opcionProfesor)) {
-                Console.Write("Debe ingresar un número: ");
+            while (!int.TryParse(Console.ReadLine(), out opcionProfesor) || opcionProfesor < 1 || opcionProfesor > profesores.Count) {
+                Console.Write("\nSeleccione profesor correcto: ");
             }
-
-            if (opcionProfesor < 1 || opcionProfesor > profesores.Count) {
-                Console.WriteLine("Opción inválida.");
-                return;
-            }
-
-            string materia;
-
-            do {
-                Console.Write("Materia: ");
-                materia = Console.ReadLine() ?? "";
-
-                if (materia == "") {
-                    Console.WriteLine("Debe ingresar la materia.");
-                }
-
-            } while (materia == "");
 
             string horario;
 
             do {
-                Console.Write("Horario: ");
+                Console.Write("\nHORARIO A RESERVAR: ");
                 horario = Console.ReadLine() ?? "";
 
                 if (horario == "") {
@@ -362,11 +377,12 @@
 
             } while (horario == "");
 
-            Reserva nuevaReserva = new Reserva(aulas[opcionAula - 1], profesores[opcionProfesor - 1], materia, horario);
+            Reserva nuevaReserva = new Reserva(aulas[opcionAula - 1], profesores[opcionProfesor - 1], horario);
 
             reservas.Add(nuevaReserva);
 
             Console.WriteLine("\nReserva registrada correctamente.");
+            Console.ReadKey();
         }
 
         public void EditarReserva() {
@@ -376,31 +392,30 @@
             Console.WriteLine("===== EDITAR RESERVA =====");
 
             if (reservas.Count == 0) {
-                Console.WriteLine("No existen reservas registradas.");
+                Console.WriteLine("\nNo existen reservas registradas.");
+                Console.ReadKey();
                 return;
             }
 
+            Console.WriteLine("\nRESERVAS REGISTRADAS\n");
+
             for (int i = 0; i < reservas.Count; i++) {
                 
-                Console.WriteLine((i + 1) + ". " + reservas[i].Profesor.Nombre + " - " + reservas[i].Aula.Nombre + " - " + reservas[i].Horario);
+                Console.WriteLine((i + 1) + ". " + reservas[i].Profesor.Nombre + " - " + reservas[i].Aula.Nombre + " - (" 
+                                    + reservas[i].Profesor.Materia + ") - " + reservas[i].Horario);
             }
 
             int opcionReserva;
 
             Console.Write("\nSeleccione la reserva: ");
 
-            while (!int.TryParse(Console.ReadLine(), out opcionReserva)) {
-                Console.Write("Debe ingresar un número: ");
-            }
-
-            if (opcionReserva < 1 || opcionReserva > reservas.Count) {
-                Console.WriteLine("Opción inválida.");
-                return;
+            while (!int.TryParse(Console.ReadLine(), out opcionReserva) || opcionReserva < 1 || opcionReserva > reservas.Count) {
+                Console.Write("\nSeleccione reserva correcta: ");
             }
 
             Reserva reserva = reservas[opcionReserva - 1];
 
-            Console.WriteLine("\nAULAS");
+            Console.WriteLine("\nAULAS\n");
 
             for (int i = 0; i < aulas.Count; i++) {
                 Console.WriteLine((i + 1) + ". " + aulas[i].Nombre);
@@ -408,18 +423,13 @@
 
             int opcionAula;
 
-            Console.Write("Seleccione un aula: ");
+            Console.Write("\nSeleccione un aula: ");
 
-            while (!int.TryParse(Console.ReadLine(), out opcionAula)) {
-                Console.Write("Debe ingresar un número: ");
+            while (!int.TryParse(Console.ReadLine(), out opcionAula) || opcionAula < 1 || opcionAula > aulas.Count) {
+                Console.Write("\nSeleccione aula correcta: ");
             }
 
-            if (opcionAula < 1 || opcionAula > aulas.Count) {
-                Console.WriteLine("Opción inválida.");
-                return;
-            }
-
-            Console.WriteLine("\nPROFESORES");
+            Console.WriteLine("\nPROFESORES\n");
 
             for (int i = 0; i < profesores.Count; i++) {
                 Console.WriteLine((i + 1) + ". " + profesores[i].Nombre);
@@ -427,34 +437,17 @@
 
             int opcionProfesor;
 
-            Console.Write("Seleccione un profesor: ");
+            Console.Write("\nSeleccione un profesor: ");
 
-            while (!int.TryParse(Console.ReadLine(), out opcionProfesor)) {
-                Console.Write("Debe ingresar un número: ");
+            while (!int.TryParse(Console.ReadLine(), out opcionProfesor) || opcionProfesor < 1 || opcionProfesor > profesores.Count) {
+                Console.Write("\nSeleccione profesor correcto: ");
             }
-
-            if (opcionProfesor < 1 || opcionProfesor > profesores.Count) {
-                Console.WriteLine("Opción inválida.");
-                return;
-            }
-
-            string materia;
-            do {
-                
-                Console.Write("Nueva materia: ");
-                materia = Console.ReadLine() ?? "";
-
-                if (materia == "") {
-                    Console.WriteLine("Debe ingresar la materia.");
-                }
-
-            } while (materia == "");
-
 
             string horario;
+            
             do {
                 
-                Console.Write("Nuevo horario: ");
+                Console.Write("\nNUEVO HORARIO: ");
                 horario = Console.ReadLine() ?? "";
 
                 if (horario == "") {
@@ -465,10 +458,10 @@
 
             reserva.Aula = aulas[opcionAula - 1];
             reserva.Profesor = profesores[opcionProfesor - 1];
-            reserva.Materia = materia;
             reserva.Horario = horario;
 
             Console.WriteLine("\nReserva actualizada correctamente.");
+            Console.ReadKey();
         }
 
         public void ListarReservas() {
@@ -478,19 +471,21 @@
             Console.WriteLine("===== LISTADO DE RESERVAS =====");
 
             if (reservas.Count == 0) {
-                Console.WriteLine("No existen reservas.");
+                Console.WriteLine("\nNo existen reservas.");
+                Console.ReadKey();
                 return;
             }
 
             for (int i = 0; i < reservas.Count; i++) {
                 
-                Console.WriteLine("Reserva #" + (i + 1));
-                Console.WriteLine("Profesor : " + reservas[i].Profesor.Nombre);
+                Console.WriteLine("\nReserva #" + (i + 1));
+                Console.WriteLine("\nProfesor : " + reservas[i].Profesor.Nombre);
                 Console.WriteLine("Aula     : " + reservas[i].Aula.Nombre);
-                Console.WriteLine("Materia  : " + reservas[i].Materia);
+                Console.WriteLine("Materia  : " + reservas[i].Profesor.Materia);
                 Console.WriteLine("Horario  : " + reservas[i].Horario);
             }
-        }
 
+            Console.ReadKey();
+        }
     }
 }
