@@ -44,12 +44,12 @@ while (!salir) {
                 Console.Write("Nombre del aula: ");
                 aula.Nombre = Console.ReadLine() ?? "";
 
-                Console.Write("Capacidad: ");
+                Console.Write("Capacidad (estudiantes): ");
                 aula.Capacidad = Convert.ToInt32(Console.ReadLine());
 
                 aulas.Add(aula);
 
-                Console.WriteLine("Aula registrada correctamente.");
+                Console.WriteLine("\nAula registrada correctamente.");
 
                 break;
 
@@ -61,8 +61,7 @@ while (!salir) {
                     Console.WriteLine("\n--- AULAS REGISTRADAS ---");
 
                     foreach (Aula a in aulas) {
-                        Console.WriteLine("---------------------");
-                        Console.WriteLine("ID: " + a.Id);
+                        Console.WriteLine("\nID: " + a.Id);
                         Console.WriteLine("Nombre: " + a.Nombre);
                         Console.WriteLine("Capacidad (estudiantes): " + a.Capacidad);
                     }
@@ -82,7 +81,7 @@ while (!salir) {
 
                 profesores.Add(profesor);
 
-                Console.WriteLine("Profesor registrado correctamente.");
+                Console.WriteLine("\nProfesor registrado correctamente.");
 
                 break;
 
@@ -94,8 +93,7 @@ while (!salir) {
                     Console.WriteLine("\n--- PROFESORES REGISTRADOS ---");
 
                     foreach (Profesor p in profesores) {
-                        Console.WriteLine("---------------------");
-                        Console.WriteLine("ID: " + p.Id);
+                        Console.WriteLine("\nID: " + p.Id);
                         Console.WriteLine("Nombre: " + p.Nombre);
                     }
                 }
@@ -107,6 +105,11 @@ while (!salir) {
                 if (aulas.Count == 0 || profesores.Count == 0) {
                     Console.WriteLine("\nDebe registrar aulas y profesores primero.");
                     break;
+                } else if (aulas.Count == 0) {
+                    Console.WriteLine("\nDebe registrar un aula.");
+                    break;
+                } else if (profesores.Count == 0) {
+                    Console.WriteLine("\nDebe registrar un profesor");
                 }
 
                 Console.WriteLine("\n--- CREAR RESERVA ---");
@@ -117,7 +120,7 @@ while (!salir) {
                     Console.WriteLine("ID: " + a.Id + " | Nombre: " + a.Nombre + " | Capacidad: " + a.Capacidad);
                 }
 
-                Console.Write("ID del aula: ");
+                Console.Write("\nID del aula: ");
                 string idAula = Console.ReadLine() ?? "";
 
                 int idAula2;
@@ -149,7 +152,7 @@ while (!salir) {
                     Console.WriteLine("ID: " + p.Id + " | Nombre: " + p.Nombre);
                 }
 
-                Console.Write("ID del profesor: ");
+                Console.Write("\nID del profesor: ");
                 int idProfesor = int.Parse(Console.ReadLine() ?? "");
 
                 Profesor profesorEncontrado = null;
@@ -166,17 +169,17 @@ while (!salir) {
                     break;
                 }
 
-                Console.Write("Día de la reserva: ");
+                Console.Write("\nDía de la reserva: ");
                 string dia = Console.ReadLine() ?? "";
 
-                Console.Write("Hora inicio, ejemplo 8: ");
+                Console.Write("\nHora inicio, ejemplo 8: ");
                 int horaInicio = int.Parse(Console.ReadLine() ?? "");
 
-                Console.Write("Hora fin, ejemplo 10: ");
+                Console.Write("\nHora fin, ejemplo 10: ");
                 int horaFin = int.Parse(Console.ReadLine() ?? "");
 
                 if (horaInicio >= horaFin) {
-                    Console.WriteLine("La hora de inicio debe ser menor que la hora final.");
+                    Console.WriteLine("\nLa hora de inicio debe ser menor que la hora final.");
                     break;
                 }
 
@@ -196,7 +199,7 @@ while (!salir) {
                 }
 
                 if (!disponible) {
-                    Console.WriteLine("No disponible. El aula o el profesor ya tiene una reserva en ese horario.");
+                    Console.WriteLine("\nNo disponible. El aula o el profesor ya tiene una reserva en ese horario.");
                 } else {
                     
                     Reserva reserva2 = new Reserva();
@@ -211,7 +214,7 @@ while (!salir) {
                     reserva.Add(reserva2);
                     contadorReserva++;
 
-                    Console.WriteLine("Reserva creada correctamente.");
+                    Console.WriteLine("\nReserva creada correctamente.");
                 }
 
                 break;
@@ -221,13 +224,12 @@ while (!salir) {
                 Console.WriteLine("\n--- LISTADO DE RESERVAS ---");
 
                 if (reserva.Count == 0) {
-                    Console.WriteLine("No hay reservas registradas.");
+                    Console.WriteLine("\nNo hay reservas registradas.");
                 } else {
                     
                     foreach (Reserva r in reserva) {
                         
-                        Console.WriteLine("--------------------------");
-                        Console.WriteLine("ID Reserva: " + r.Id);
+                        Console.WriteLine("\nID Reserva: " + r.Id);
                         Console.WriteLine("Aula: " + r.Aula.Nombre);
                         Console.WriteLine("Profesor: " + r.Profesor.Nombre);
                         Console.WriteLine("Día: " + r.Dia);
@@ -242,13 +244,12 @@ while (!salir) {
                 Console.WriteLine("\n--- LISTADO DE RESERVAS ---");
 
                 if (reserva.Count == 0) {
-                    Console.WriteLine("No hay reservas registradas.");
+                    Console.WriteLine("\nNo hay reservas registradas.");
                 } else {
                     
                     foreach (Reserva r in reserva) {
                         
-                        Console.WriteLine("--------------------------");
-                        Console.WriteLine("ID Reserva: " + r.Id);
+                        Console.WriteLine("\nID Reserva: " + r.Id);
                         Console.WriteLine("Aula: " + r.Aula.Nombre);
                         Console.WriteLine("Profesor: " + r.Profesor.Nombre);
                         Console.WriteLine("Día: " + r.Dia);
@@ -261,7 +262,7 @@ while (!salir) {
             case 8:
 
                 salir = true;
-                Console.WriteLine("Saliendo del sistema.");
+                Console.WriteLine("\nSaliendo del sistema.");
 
                 break;
 
