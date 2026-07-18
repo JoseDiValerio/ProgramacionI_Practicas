@@ -38,8 +38,25 @@ while (!salir) {
 
                 Aula aula = new Aula();
 
-                Console.Write("\nID del aula: ");
-                aula.Id = int.Parse(Console.ReadLine() ?? "");
+                bool existe = true;
+
+                while (existe) {
+                    
+                    existe = false;
+
+                    Console.Write("\nID del aula: ");
+                    aula.Id = int.Parse(Console.ReadLine() ?? "");
+
+                    foreach (Aula a in aulas) {
+                        
+                        if (a.Id == aula.Id) {
+                            
+                            Console.WriteLine("\nEse ID ya existe. Intente nuevamente.");
+                            existe = true;
+                            break;
+                        }
+                    }
+                }
 
                 Console.Write("Nombre del aula: ");
                 aula.Nombre = Console.ReadLine() ?? "";
@@ -73,8 +90,25 @@ while (!salir) {
 
                 Profesor profesor = new Profesor();
 
-                Console.Write("\nID del profesor: ");
-                profesor.Id = int.Parse(Console.ReadLine() ?? "");
+                bool existe2 = true;
+
+                while (existe2) {
+                    
+                    existe2 = false;
+
+                    Console.Write("\nID del profesor: ");
+                    profesor.Id = int.Parse(Console.ReadLine() ?? "");
+
+                    foreach (Profesor p in profesores) {
+                        
+                        if (p.Id == profesor.Id) {
+                            
+                            Console.WriteLine("\nEse ID ya existe. Intente nuevamente.");
+                            existe2 = true;
+                            break;
+                        }
+                    }
+                }
 
                 Console.Write("Nombre del profesor: ");
                 profesor.Nombre = Console.ReadLine() ?? "";
@@ -115,7 +149,7 @@ while (!salir) {
 
                 Console.WriteLine("\n--- CREAR RESERVA ---");
 
-                Console.WriteLine("\n--- Aulas disponibles ---");
+                Console.WriteLine("\n--- Aulas disponibles ---\n");
 
                 foreach (Aula a in aulas) {
                     Console.WriteLine("ID: " + a.Id + " | Nombre: " + a.Nombre + " | Capacidad: " + a.Capacidad);
@@ -144,7 +178,7 @@ while (!salir) {
                     break;
                 }
 
-                Console.WriteLine("\n--- Profesores disponibles ---");
+                Console.WriteLine("\n--- Profesores disponibles ---\n");
 
                 foreach (Profesor p in profesores) {
                     Console.WriteLine("ID: " + p.Id + " | Nombre: " + p.Nombre);
