@@ -189,30 +189,64 @@ namespace Classroom_Booking
 
             Console.WriteLine("===== EDIT CLASSROOM =====");
 
-            if (classroom.Count == 0)
+            List<string> classroomCodes = new List<string>();
+
+            try
             {
-                Console.WriteLine("\nNo classrooms registered.");
+                Conexion conexion = new Conexion();
+
+                using (SqlConnection cn = conexion.ObtenerConexion())
+                {
+                    cn.Open();
+
+                    string sql = "SELECT Code, Name, Capacity FROM Classroom";
+
+                    SqlCommand cmd = new SqlCommand(sql, cn);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (!reader.HasRows)
+                    {
+                        Console.WriteLine("\nNo classrooms registered.");
+                        Console.ReadKey();
+                        return;
+                    }
+
+                    int i = 1;
+
+                    while (reader.Read())
+                    {
+                        Console.WriteLine("\nClassroom (" + i + ")");
+                        Console.WriteLine("------------------------------");
+                        Console.WriteLine("Code: " + reader["Code"]);
+                        Console.WriteLine("Name: " + reader["Name"]);
+                        Console.WriteLine("Capacity: " + reader["Capacity"] + " students.");
+
+                        string classroomCode = Convert.ToString(reader["Code"]) ?? "";
+                        classroomCodes.Add(classroomCode);
+
+                        i++;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nError.");
+                Console.WriteLine(ex.Message);
                 Console.ReadKey();
                 return;
-            }
-
-            for (int i = 0; i < classroom.Count; i++)
-            {
-
-                Console.WriteLine("\nClassroom (" + (i + 1) + ") " + "Code: " + classroom[i].Code + " - " + classroom[i].Name + " - "
-                                    + "Capacity: " + classroom[i].Capacity + " students.");
             }
 
             int option;
 
             Console.Write("\nSelect the classroom number: ");
 
-            while (!int.TryParse(Console.ReadLine(), out option) || option < 1 || option > classroom.Count)
+            while (!int.TryParse(Console.ReadLine(), out option) || option < 1 || option > classroomCodes.Count)
             {
                 Console.Write("\nInvalid option. Please try again: ");
             }
 
-            Classroom classrooms = classroom[option - 1];
+            string selectCode = classroomCodes[option - 1];
 
             string code, name;
             int capacity;
