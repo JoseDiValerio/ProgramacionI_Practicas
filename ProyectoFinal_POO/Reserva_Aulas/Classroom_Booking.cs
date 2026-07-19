@@ -133,7 +133,7 @@ namespace Classroom_Booking {
 
             for (int i = 0; i < classroom.Count; i++) {
 
-                Console.WriteLine("\nClassroom (" + (i + 1) + "). " + "Code: " + classroom[i].Code + " - " + classroom[i].Name + " - "
+                Console.WriteLine("\nClassroom (" + (i + 1) + ") " + "Code: " + classroom[i].Code + " - " + classroom[i].Name + " - "
                                     + "Capacity: " + classroom[i].Capacity + " students.");
             }
 
@@ -186,7 +186,7 @@ namespace Classroom_Booking {
 
             for (int i = 0; i < classroom.Count; i++) {
 
-                Console.WriteLine("\nClassrooms. #" + (i + 1));
+                Console.WriteLine("\nClassrooms #" + (i + 1));
                 Console.WriteLine("\nCode: " + classroom[i].Code);
                 Console.WriteLine("Name: " + classroom[i].Name);
                 Console.WriteLine("Capacity (students): " + classroom[i].Capacity);
@@ -247,7 +247,7 @@ namespace Classroom_Booking {
             }
 
             for (int i = 0; i < teachers.Count; i++) {
-                Console.WriteLine("\nTeacher: (" + (i + 1) + "). " + "Code: " + teachers[i].Code + " - " + "Name: " + teachers[i].Name + 
+                Console.WriteLine("\nTeacher: (" + (i + 1) + ") " + "Code: " + teachers[i].Code + " - " + "Name: " + teachers[i].Name + 
                                   " - " + "Subject: " + teachers[i].Subject);
             }
 
@@ -415,7 +415,7 @@ namespace Classroom_Booking {
                 Console.Write("\nSelect the correct reservation: ");
             }
 
-            Booking booking = booking[reservationOption - 1];
+            Booking bookings = booking[reservationOption - 1];
 
             Console.WriteLine("\nCLASSROOMS\n");
 
@@ -458,9 +458,9 @@ namespace Classroom_Booking {
 
             } while (schedule == "");
 
-            booking.Classroom = classroom[optionClassroom - 1];
-            booking.Teacher = teachers[teacherOption - 1];
-            booking.Schedule = schedule;
+            bookings.Classroom = classroom[optionClassroom - 1];
+            bookings.Teacher = teachers[teacherOption - 1];
+            bookings.Schedule = schedule;
 
             Console.WriteLine("\nReservation successfully updated.");
             Console.ReadKey();
