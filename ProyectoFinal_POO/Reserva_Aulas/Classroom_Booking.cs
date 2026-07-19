@@ -367,23 +367,23 @@ namespace Classroom_Booking {
                 Console.Write("\nSelect the correct teacher: ");
             }
 
-            string horario;
+            string schedule;
 
             do {
-                Console.Write("\nHORARIO A RESERVAR: ");
-                horario = Console.ReadLine() ?? "";
+                Console.Write("\nRESERVATION HOURS: ");
+                schedule = Console.ReadLine() ?? "";
 
-                if (horario == "") {
-                    Console.WriteLine("Debe ingresar el horario.");
+                if (schedule == "") {
+                    Console.WriteLine("You must enter the schedule..");
                 }
 
-            } while (horario == "");
+            } while (schedule == "");
 
-            Reserva nuevaReserva = new Reserva(aulas[opcionAula - 1], profesores[opcionProfesor - 1], horario);
+            Booking newReservation = new Booking(classroom[optionClassroom - 1], teachers[teacherOption - 1], schedule);
 
-            reservas.Add(nuevaReserva);
+            booking.Add(newReservation);
 
-            Console.WriteLine("\nReserva registrada correctamente.");
+            Console.WriteLine("\nReservation successfully recorded.");
             Console.ReadKey();
         }
 
