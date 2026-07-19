@@ -248,22 +248,6 @@ namespace Classroom_Booking
 
             Console.WriteLine("===== LIST OF CLASSROOMS =====");
 
-            //if (classroom.Count == 0)
-            //{
-            //    Console.WriteLine("\nNo classrooms are registered.");
-            //    Console.ReadKey();
-            //    return;
-            //}
-
-            //for (int i = 0; i < classroom.Count; i++)
-            //{
-
-            //    Console.WriteLine("\nClassrooms #" + (i + 1));
-            //    Console.WriteLine("\nCode: " + classroom[i].Code);
-            //    Console.WriteLine("Name: " + classroom[i].Name);
-            //    Console.WriteLine("Capacity (students): " + classroom[i].Capacity);
-            //}
-
             try
             {
                 Conexion conexion = new Conexion();
@@ -290,7 +274,8 @@ namespace Classroom_Booking
                     while (reader.Read())
                     {
                         Console.WriteLine("\nClassroom #" + i);
-                        Console.WriteLine("\nCode: " + reader["Code"]);
+                        Console.WriteLine("------------------------------");
+                        Console.WriteLine("Code: " + reader["Code"]);
                         Console.WriteLine("Name: " + reader["Name"]);
                         Console.WriteLine("Capacity (students): " + reader["Capacity"]);
 
