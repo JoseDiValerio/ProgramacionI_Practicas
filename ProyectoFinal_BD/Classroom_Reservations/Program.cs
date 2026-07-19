@@ -1,6 +1,28 @@
 ﻿// Proyecto Final - Reserva de Aulas
 // Jose Daniel Di Valerio 2025-1887
 using Classroom_Booking;
+using Microsoft.Data.SqlClient;
+
+try
+{
+    Conexion conexion = new Conexion();
+
+    using (SqlConnection cn = conexion.ObtenerConexion())
+    {
+        cn.Open();
+        Console.WriteLine("Conectado correctamente a MySQL");
+    }
+
+    Console.WriteLine("Presione una tecla para continuar...");
+    Console.ReadKey();
+}
+catch (Exception ex)
+{
+    Console.WriteLine("Error al conectar con MySQL.");
+    Console.WriteLine(ex.Message);
+    Console.ReadKey();
+    return;
+}
 
 ClassroomBooking system = new ClassroomBooking();
 
