@@ -28,15 +28,15 @@ namespace Classroom_Booking {
 
         private int ReadNumber(string message) {
             
-            int numero;
+            int number;
 
-            Console.Write(mensaje);
+            Console.Write(message);
 
-            while (!int.TryParse(Console.ReadLine(), out numero) || numero <= 0) {
-                Console.Write("\nIngrese numero entero mayor que 0: ");
+            while (!int.TryParse(Console.ReadLine(), out number) || number <= 0) {
+                Console.Write("\nEnter an integer greater than 0: ");
             }
 
-            return numero;
+            return number;
         }
 
         private bool AddClassroomCode(string code) {
@@ -65,9 +65,9 @@ namespace Classroom_Booking {
 
         private bool AddTeacherCode(string code) {
 
-            foreach (Profesor profesores in profesores) {
+            foreach (Teacher teacher in teachers) {
 
-                if (profesores.Codigo == codigo) {
+                if (teacher.Code == code) {
                     return true;
                 }
             }
@@ -77,9 +77,9 @@ namespace Classroom_Booking {
 
         private bool EditTeacherCode(string code, Teacher currentProfessor) {
 
-            foreach (Profesor profesores in profesores) {
+            foreach (Teacher teachers in teachers) {
 
-                if (profesores != profesorActual && profesores.Codigo == codigo) {
+                if (teachers != currentProfessor && teachers.Code == code) {
                     return true;
                 }
             }
@@ -102,7 +102,7 @@ namespace Classroom_Booking {
                 code = Console.ReadLine() ?? "";
 
                 if (AddClassroomCode(code)) {
-                    Console.WriteLine("\nCodigo ya existe.");
+                    Console.WriteLine("\nCode already exists.");
                 }
 
             } while (AddClassroomCode(code));
@@ -176,20 +176,20 @@ namespace Classroom_Booking {
             
             Console.Clear();
 
-            Console.WriteLine("===== LISTADO DE AULAS =====");
+            Console.WriteLine("===== LIST OF CLASSROOMS =====");
 
-            if (aulas.Count == 0) {
-                Console.WriteLine("\nNo hay aulas registradas.");
+            if (classroom.Count == 0) {
+                Console.WriteLine("\nNo classrooms are registered.");
                 Console.ReadKey();
                 return;
             }
 
-            for (int i = 0; i < aulas.Count; i++) {
+            for (int i = 0; i < classroom.Count; i++) {
 
-                Console.WriteLine("\nAula #" + (i + 1));
-                Console.WriteLine("\nCódigo: " + aulas[i].Codigo);
-                Console.WriteLine("Nombre: " + aulas[i].Nombre);
-                Console.WriteLine("Capacidad (estudiantes): " + aulas[i].Capacidad);
+                Console.WriteLine("\nClassrooms. #" + (i + 1));
+                Console.WriteLine("\nCode: " + classroom[i].Code);
+                Console.WriteLine("Name: " + classroom[i].Name);
+                Console.WriteLine("Capacity (students): " + classroom[i].Capacity);
             }
 
             Console.ReadKey();
@@ -199,38 +199,38 @@ namespace Classroom_Booking {
         {
             Console.Clear();
 
-            Console.WriteLine("===== REGISTRAR PROFESOR =====");
+            Console.WriteLine("===== REGISTER TEACHER =====");
 
-            string codigo, nombre;
-            string materia;
-
-            do {
-                Console.Write("\nCodigo: ");
-                codigo = Console.ReadLine() ?? "";
-
-                if (ExisteCodigoProfesorAgregar(codigo)) {
-                    Console.WriteLine("\nCodigo ya existe.");
-                }
-
-            } while (ExisteCodigoProfesorAgregar(codigo));
-
-            nombre = LeerNombre("\nNombre: ");
+            string code, name;
+            string subject;
 
             do {
-                Console.Write("\nMateria: ");
-                materia = Console.ReadLine() ?? "";
+                Console.Write("\nCode: ");
+                code = Console.ReadLine() ?? "";
 
-                if (materia == "") {
-                    Console.WriteLine("Debe ingresar una materia.");
+                if (AddTeacherCode(code)) {
+                    Console.WriteLine("\nCode already exists.");
                 }
 
-            } while (materia == "");
+            } while (AddTeacherCode(code));
 
-            Profesor nuevoProfesor = new Profesor(codigo, nombre, materia);
+            name = ReadName("\nName: ");
 
-            profesores.Add(nuevoProfesor);
+            do {
+                Console.Write("\nSubject: ");
+                subject = Console.ReadLine() ?? "";
 
-            Console.WriteLine("\nProfesor registrado correctamente.");
+                if (subject == "") {
+                    Console.WriteLine("You must enter a subject.");
+                }
+
+            } while (subject == "");
+
+            Teacher newTeacher = new Teacher(code, name, subject);
+
+            teachers.Add(newTeacher);
+
+            Console.WriteLine("\nProfessor successfully registered.");
             Console.ReadKey();
         }
 
@@ -238,59 +238,59 @@ namespace Classroom_Booking {
             
             Console.Clear();
 
-            Console.WriteLine("===== EDITAR PROFESOR =====");
+            Console.WriteLine("===== EDIT TEACHER =====");
 
-            if (profesores.Count == 0) {
-                Console.WriteLine("\nNo hay profesores registrados.");
+            if (teachers.Count == 0) {
+                Console.WriteLine("\nThere are no registered teachers.");
                 Console.ReadKey();
                 return;
             }
 
-            for (int i = 0; i < profesores.Count; i++) {
-                Console.WriteLine("\nProfesor: (" + (i + 1) + "). " + "Codigo: " + profesores[i].Codigo + " - " + "Nombre: " + profesores[i].Nombre + 
-                                  " - " + "Materia: " + profesores[i].Materia);
+            for (int i = 0; i < teachers.Count; i++) {
+                Console.WriteLine("\nTeacher: (" + (i + 1) + "). " + "Code: " + teachers[i].Code + " - " + "Name: " + teachers[i].Name + 
+                                  " - " + "Subject: " + teachers[i].Subject);
             }
 
-            int opcion;
+            int option;
 
-            Console.Write("\nSeleccione el profesor: ");
+            Console.Write("\nSelect the teacher: ");
 
-            while (!int.TryParse(Console.ReadLine(), out opcion) || opcion < 1 || opcion > profesores.Count) {
-                Console.Write("\nOpcion invalida. Intente nuevamente: ");
+            while (!int.TryParse(Console.ReadLine(), out option) || option < 1 || option > teachers.Count) {
+                Console.Write("\nInvalid option. Please try again: ");
             }
 
-            Profesor profesor = profesores[opcion - 1];
+            Teacher teacher = teachers[option - 1];
 
-            string codigo, nombre;
-            string materia;
-
-            do {
-                Console.Write("\nNuevo código: ");
-                codigo = Console.ReadLine() ?? "";
-
-                if (ExisteCodigoProfesorEditar(codigo, profesor)) {
-                    Console.WriteLine("\nCodigo ya existe.");
-                }
-
-            } while (ExisteCodigoProfesorEditar(codigo, profesor));
-
-            nombre = LeerNombre("\nNombre: ");
+            string code, name;
+            string subject;
 
             do {
-                Console.Write("\nNueva materia: ");
-                materia = Console.ReadLine() ?? "";
+                Console.Write("\nNew code: ");
+                code = Console.ReadLine() ?? "";
 
-                if (materia == "") {
-                    Console.WriteLine("Debe ingresar una materia.");
+                if (EditTeacherCode(code, teacher)) {
+                    Console.WriteLine("\nCode already exists.");
                 }
 
-            } while (materia == "");
+            } while (EditTeacherCode(code, teacher));
 
-            profesor.Codigo = codigo;
-            profesor.Nombre = nombre;
-            profesor.Materia = materia;
+            name = ReadName("\nName: ");
 
-            Console.WriteLine("\nProfesor actualizado correctamente.");
+            do {
+                Console.Write("\nNew subject: ");
+                subject = Console.ReadLine() ?? "";
+
+                if (subject == "") {
+                    Console.WriteLine("You must enter a subject.");
+                }
+
+            } while (subject == "");
+
+            teacher.Code = code;
+            teacher.Name = name;
+            teacher.Subject = subject;
+
+            Console.WriteLine("\nProfessor successfully updated.");
             Console.ReadKey();
         }
 
@@ -298,20 +298,20 @@ namespace Classroom_Booking {
             
             Console.Clear();
 
-            Console.WriteLine("===== LISTADO DE PROFESORES =====");
+            Console.WriteLine("===== LIST OF TEACHERS =====");
 
-            if (profesores.Count == 0) {
-                Console.WriteLine("\nNo hay profesores registrados.");
+            if (teachers.Count == 0) {
+                Console.WriteLine("\nThere are no registered teachers.");
                 Console.ReadKey();
                 return;
             }
 
-            for (int i = 0; i < profesores.Count; i++) {
+            for (int i = 0; i < teachers.Count; i++) {
                 
-                Console.WriteLine("\nProfesor #" + (i + 1));
-                Console.WriteLine("\nCódigo: " + profesores[i].Codigo);
-                Console.WriteLine("Nombre: " + profesores[i].Nombre);
-                Console.WriteLine("Materia: " + profesores[i].Materia);
+                Console.WriteLine("\nTeacher#" + (i + 1));
+                Console.WriteLine("\nCode: " + teachers[i].Code);
+                Console.WriteLine("Name: " + teachers[i].Name);
+                Console.WriteLine("Subject: " + teachers[i].Subject);
             }
 
             Console.ReadKey();
@@ -321,50 +321,50 @@ namespace Classroom_Booking {
             
             Console.Clear();
 
-            Console.WriteLine("===== REGISTRAR RESERVA =====");
+            Console.WriteLine("===== REGISTER RESERVATION =====");
 
-            if (aulas.Count == 0 && profesores.Count == 0) {
-                Console.WriteLine("\nDebe registrar al menos un aula y un profesor.");
+            if (classroom.Count == 0 && teachers.Count == 0) {
+                Console.WriteLine("\nYou must register at least one classroom and one teacher.");
                 Console.ReadKey();
                 return;
 
-            } else if (aulas.Count == 0) {
-                Console.WriteLine("\nDebe registrar al menos un aula.");
+            } else if (classroom.Count == 0) {
+                Console.WriteLine("\nYou must register at least one classroom.");
                 Console.ReadKey();
                 return;
 
-            } else if (profesores.Count == 0) {
-                Console.WriteLine("\nDebe registrar al menos un profesor.");
+            } else if (teachers.Count == 0) {
+                Console.WriteLine("\nYou must register at least one teacher.");
                 Console.ReadKey();
                 return;
             }
 
-            Console.WriteLine("\nAULAS DISPONIBLES\n");
+            Console.WriteLine("\nAVAILABLE CLASSROOMS\n");
 
-            for (int i = 0; i < aulas.Count; i++) {
-                Console.WriteLine((i + 1) + ". " + aulas[i].Nombre + " (" + aulas[i].Codigo + ")");
+            for (int i = 0; i < classroom.Count; i++) {
+                Console.WriteLine((i + 1) + ". " + classroom[i].Name + " (" + classroom[i].Code + ")");
             }
 
-            int opcionAula;
+            int optionClassroom;
 
-            Console.Write("\nSeleccione un aula: ");
+            Console.Write("\nSelect a classroom: ");
 
-            while (!int.TryParse(Console.ReadLine(), out opcionAula) || opcionAula < 1 || opcionAula > aulas.Count) {
-                Console.Write("\nSeleccione aula correcta: ");
+            while (!int.TryParse(Console.ReadLine(), out optionClassroom) || optionClassroom < 1 || optionClassroom > classroom.Count) {
+                Console.Write("\nSelect the correct classroom: ");
             }
 
-            Console.WriteLine("\nPROFESORES DISPONIBLES\n");
+            Console.WriteLine("\nAVAILABLE TEACHERS\n");
 
-            for (int i = 0; i < profesores.Count; i++) {
-                Console.WriteLine((i + 1) + ". " + profesores[i].Nombre + " - " + "Materia: " + profesores[i].Materia);
+            for (int i = 0; i < teachers.Count; i++) {
+                Console.WriteLine((i + 1) + ". " + teachers[i].Name + " - " + "Subject: " + teachers[i].Subject);
             }
 
-            int opcionProfesor;
+            int teacherOption;
 
-            Console.Write("\nSeleccione un profesor: ");
+            Console.Write("\nSelect a teacher: ");
 
-            while (!int.TryParse(Console.ReadLine(), out opcionProfesor) || opcionProfesor < 1 || opcionProfesor > profesores.Count) {
-                Console.Write("\nSeleccione profesor correcto: ");
+            while (!int.TryParse(Console.ReadLine(), out teacherOption) || teacherOption < 1 || teacherOption > teachers.Count) {
+                Console.Write("\nSelect the correct teacher: ");
             }
 
             string horario;
