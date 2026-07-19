@@ -1,5 +1,4 @@
-﻿namespace Reserva_Aulas
-{
+﻿namespace Classroom_Booking {
     public class Aula {
         public string Codigo { get; set; }
         public string Nombre { get; set; }

@@ -1,149 +1,149 @@
 ﻿// Proyecto Final - Reserva de Aulas
 // Jose Daniel Di Valerio 2025-1887
-using Reserva_Aulas;
+using Classroom_Booking;
 
-ReservaAulas sistema = new ReservaAulas();
+ClassroomBooking system = new ClassroomBooking();
 
-int opcion;
+int option;
 
 do {
     Console.Clear();
 
     Console.WriteLine("========================================");
-    Console.WriteLine("      SISTEMA DE RESERVAS DE AULAS");
+    Console.WriteLine("      CLASSROOM BOOKING SYSTEM");
     Console.WriteLine("========================================");
-    Console.WriteLine("\n\t1. Gestionar Aulas");
-    Console.WriteLine("\t2. Gestionar Profesores");
-    Console.WriteLine("\t3. Gestionar Reservas");
-    Console.WriteLine("\t4. Salir");
+    Console.WriteLine("\n\t1. Manage Classrooms");
+    Console.WriteLine("\t2. Manage Teachers");
+    Console.WriteLine("\t3. Manage Reservations");
+    Console.WriteLine("\t4. Exit");
     Console.WriteLine("\n========================================");
-    Console.Write("\nSeleccione una opción: ");
+    Console.Write("\nSelect an option: ");
 
-    while (!int.TryParse(Console.ReadLine(), out opcion) || opcion < 1 || opcion > 4) {
-        Console.Write("\nOpción inválida. Intente nuevamente: ");
+    while (!int.TryParse(Console.ReadLine(), out option) || option < 1 || option > 4) {
+        Console.Write("\nInvalid option. Please try again.: ");
     }
 
-    switch (opcion) {
+    switch (option) {
         case 1:
-            MenuAulas(sistema);
+            ClassroomsMenu(system);
             break;
 
         case 2:
-            MenuProfesores(sistema);
+            TeachersMenu(system);
             break;
 
         case 3:
-            MenuReservas(sistema);
+            MenuReservations(system);
             break;
 
         case 4:
-            Console.WriteLine("\nGracias por utilizar el sistema.");
+            Console.WriteLine("\nThank you for using the system.");
             break;
     }
-} while (opcion != 4);
+} while (option != 4);
 
-static void MenuAulas(ReservaAulas sistema) {
+static void ClassroomsMenu(ClassroomBooking system) {
 
-    int opcion;
+    int option;
 
     do {
         Console.Clear();
 
-        Console.WriteLine("======== GESTIÓN DE AULAS ========");
-        Console.WriteLine("\n\t1. Registrar Aula");
-        Console.WriteLine("\t2. Editar Aula");
-        Console.WriteLine("\t3. Listar Aulas");
-        Console.WriteLine("\t4. Volver");
+        Console.WriteLine("======== Classroom Management ========");
+        Console.WriteLine("\n\t1. Register Classroom");
+        Console.WriteLine("\t2. Edit Classroom");
+        Console.WriteLine("\t3. List Classrooms");
+        Console.WriteLine("\t4. Return");
 
-        Console.Write("\nSeleccione una opción: ");
+        Console.Write("\nSelect an option: ");
 
-        while (!int.TryParse(Console.ReadLine(), out opcion) || opcion < 1 || opcion > 4) {
-            Console.Write("\nOpción inválida. Intente nuevamente: ");
+        while (!int.TryParse(Console.ReadLine(), out option) || option < 1 || option > 4) {
+            Console.Write("\nInvalid option. Please try again: ");
         }
 
-        switch (opcion) {
+        switch (option) {
             
             case 1:
-                sistema.RegistrarAula();
+                system.RegisterClassroom();
                 break;
 
             case 2:
-                sistema.EditarAula();
+                system.EditClassroom();
                 break;
 
             case 3:
-                sistema.ListarAulas();
+                system.ListClassrooms();
                 break;
         }
-    } while (opcion != 4);
+    } while (option != 4);
 }
-static void MenuProfesores(ReservaAulas sistema) {
+static void TeachersMenu(ClassroomBooking system) {
     
-    int opcion;
+    int option;
 
     do {
         Console.Clear();
 
-        Console.WriteLine("======== GESTIÓN DE PROFESORES ========");
-        Console.WriteLine("\n\t1. Registrar Profesor");
-        Console.WriteLine("\t2. Editar Profesor");
-        Console.WriteLine("\t3. Listar Profesores");
-        Console.WriteLine("\t4. Volver");
+        Console.WriteLine("======== TEACHER MANAGEMENT ========");
+        Console.WriteLine("\n\t1. Register Professor");
+        Console.WriteLine("\t2. Edit Professor");
+        Console.WriteLine("\t3. List Professors");
+        Console.WriteLine("\t4. Return");
 
-        Console.Write("\nSeleccione una opción: ");
+        Console.Write("\nSelect an option: ");
 
-        while (!int.TryParse(Console.ReadLine(), out opcion) || opcion < 1 || opcion > 4) {
-            Console.Write("\nOpción inválida. Intente nuevamente: ");
+        while (!int.TryParse(Console.ReadLine(), out option) || option < 1 || option > 4) {
+            Console.Write("\nInvalid option. Please try again: ");
         }
 
-        switch (opcion) {
+        switch (option) {
 
             case 1:
-                sistema.RegistrarProfesor();
+                system.RegistrarProfesor();
                 break;
 
             case 2:
-                sistema.EditarProfesor();
+                system.EditarProfesor();
                 break;
 
             case 3:
-                sistema.ListarProfesores();
+                system.ListarProfesores();
                 break;
         }
-    } while (opcion != 4);
+    } while (option != 4);
 }
-static void MenuReservas(ReservaAulas sistema) {
+static void MenuReservations(ClassroomBooking system) {
     
-    int opcion;
+    int option;
 
     do {
         Console.Clear();
 
-        Console.WriteLine("======== GESTIÓN DE RESERVAS ========");
-        Console.WriteLine("\n\t1. Registrar Reserva");
-        Console.WriteLine("\t2. Editar Reserva");
-        Console.WriteLine("\t3. Listar Reservas");
-        Console.WriteLine("\t4. Volver");
+        Console.WriteLine("======== RESERVATION MANAGEMENT ========");
+        Console.WriteLine("\n\t1. Record Reservation");
+        Console.WriteLine("\t2. Edit Reservation");
+        Console.WriteLine("\t3. List Reservations");
+        Console.WriteLine("\t4. Return");
 
-        Console.Write("\nSeleccione una opción: ");
+        Console.Write("\nSelect an option: ");
 
-        while (!int.TryParse(Console.ReadLine(), out opcion) || opcion < 1 || opcion > 4) {
-            Console.Write("\nOpción inválida. Intente nuevamente: ");
+        while (!int.TryParse(Console.ReadLine(), out option) || option < 1 || option > 4) {
+            Console.Write("\nInvalid option. Please try again: ");
         }
 
-        switch (opcion) {
+        switch (option) {
             
             case 1:
-                sistema.RegistrarReserva();
+                system.RegistrarReserva();
                 break;
 
             case 2:
-                sistema.EditarReserva();
+                system.EditarReserva();
                 break;
 
             case 3:
-                sistema.ListarReservas();
+                system.ListarReservas();
                 break;
         }
-    } while (opcion != 4);
+    } while (option != 4);
 }

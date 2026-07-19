@@ -1,5 +1,5 @@
-﻿namespace Reserva_Aulas {
-    public class ReservaAulas {
+﻿namespace Classroom_Booking {
+    public class ClassroomBooking {
 
         private List<Aula> aulas = new List<Aula>();
         private List<Profesor> profesores = new List<Profesor>();
@@ -86,7 +86,7 @@
         }
 
         // Funciones principales
-        public void RegistrarAula() {
+        public void RegisterClassroom() {
             
             Console.Clear();
 
@@ -117,7 +117,7 @@
             Console.ReadKey();
         }
 
-        public void EditarAula() {
+        public void EditClassroom() {
 
             Console.Clear();
 
@@ -170,7 +170,7 @@
             Console.ReadKey();
         }
 
-        public void ListarAulas() {
+        public void ListClassrooms() {
             
             Console.Clear();
 
