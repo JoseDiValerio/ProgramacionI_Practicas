@@ -1,4 +1,6 @@
-﻿namespace Classroom_Booking
+﻿using Microsoft.Data.SqlClient;
+
+namespace Classroom_Booking
 {
     public class ClassroomBooking
     {
@@ -47,16 +49,40 @@
         private bool AddClassroomCode(string code)
         {
 
-            foreach (Classroom classroom in classroom)
-            {
+            //foreach (Classroom classroom in classroom)
+            //{
 
-                if (classroom.Code == code)
+            //    if (classroom.Code == code)
+            //    {
+            //        return true;
+            //    }
+            //}
+
+            //return false;
+
+            try
+            {
+                Conexion conexion = new Conexion();
+
+                using (SqlConnection cn = conexion.ObtenerConexion())
                 {
-                    return true;
+                    cn.Open();
+
+                    string sql = "SELECT COUNT(*) FROM Classroom WHERE Code = @Code";
+
+                    SqlCommand cmd = new SqlCommand(sql, cn);
+                    cmd.Parameters.AddWithValue("@Code", code);
+
+                    int cantidad = (int)cmd.ExecuteScalar();
+
+                    return cantidad > 0;
                 }
             }
-
-            return false;
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+                return false;
+            }
         }
 
         private bool EditClassroomCode(string code, Classroom currentClassroom)
@@ -131,11 +157,40 @@
 
             capacity = ReadNumber("\nCapacity (students): ");
 
-            Classroom newClassroom = new Classroom(code, name, capacity);
+            //Classroom newClassroom = new Classroom(code, name, capacity);
 
-            classroom.Add(newClassroom);
+            //classroom.Add(newClassroom);
 
-            Console.WriteLine("\nClassroom successfully registered.");
+            //Console.WriteLine("\nClassroom successfully registered.");
+
+            try
+            {
+                Conexion conexion = new Conexion();
+
+                using (SqlConnection cn = conexion.ObtenerConexion())
+                {
+                    cn.Open();
+
+                    string sql = @"INSERT INTO Classroom (Code, Name, Capacity)
+                           VALUES (@Code, @Name, @Capacity)";
+
+                    SqlCommand cmd = new SqlCommand(sql, cn);
+
+                    cmd.Parameters.AddWithValue("@Code", code);
+                    cmd.Parameters.AddWithValue("@Name", name);
+                    cmd.Parameters.AddWithValue("@Capacity", capacity);
+
+                    cmd.ExecuteNonQuery();
+                }
+
+                Console.WriteLine("\nClassroom successfully registered.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nError registering classroom.");
+                Console.WriteLine(ex.Message);
+            }
+
             Console.ReadKey();
         }
 
