@@ -48,18 +48,6 @@ namespace Classroom_Booking
 
         private bool AddClassroomCode(string code)
         {
-
-            //foreach (Classroom classroom in classroom)
-            //{
-
-            //    if (classroom.Code == code)
-            //    {
-            //        return true;
-            //    }
-            //}
-
-            //return false;
-
             try
             {
                 Conexion conexion = new Conexion();
@@ -260,20 +248,60 @@ namespace Classroom_Booking
 
             Console.WriteLine("===== LIST OF CLASSROOMS =====");
 
-            if (classroom.Count == 0)
+            //if (classroom.Count == 0)
+            //{
+            //    Console.WriteLine("\nNo classrooms are registered.");
+            //    Console.ReadKey();
+            //    return;
+            //}
+
+            //for (int i = 0; i < classroom.Count; i++)
+            //{
+
+            //    Console.WriteLine("\nClassrooms #" + (i + 1));
+            //    Console.WriteLine("\nCode: " + classroom[i].Code);
+            //    Console.WriteLine("Name: " + classroom[i].Name);
+            //    Console.WriteLine("Capacity (students): " + classroom[i].Capacity);
+            //}
+
+            try
             {
-                Console.WriteLine("\nNo classrooms are registered.");
-                Console.ReadKey();
-                return;
+                Conexion conexion = new Conexion();
+
+                using (SqlConnection cn = conexion.ObtenerConexion())
+                {
+                    cn.Open();
+
+                    string sql = "SELECT Code, Name, Capacity FROM Classroom";
+
+                    SqlCommand cmd = new SqlCommand(sql, cn);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (!reader.HasRows)
+                    {
+                        Console.WriteLine("\nNo classrooms are registered.");
+                        Console.ReadKey();
+                        return;
+                    }
+
+                    int i = 1;
+
+                    while (reader.Read())
+                    {
+                        Console.WriteLine("\nClassroom #" + i);
+                        Console.WriteLine("\nCode: " + reader["Code"]);
+                        Console.WriteLine("Name: " + reader["Name"]);
+                        Console.WriteLine("Capacity (students): " + reader["Capacity"]);
+
+                        i++;
+                    }
+                }
             }
-
-            for (int i = 0; i < classroom.Count; i++)
+            catch (Exception ex)
             {
-
-                Console.WriteLine("\nClassrooms #" + (i + 1));
-                Console.WriteLine("\nCode: " + classroom[i].Code);
-                Console.WriteLine("Name: " + classroom[i].Name);
-                Console.WriteLine("Capacity (students): " + classroom[i].Capacity);
+                Console.WriteLine("\nError listing classrooms.");
+                Console.WriteLine(ex.Message);
             }
 
             Console.ReadKey();
