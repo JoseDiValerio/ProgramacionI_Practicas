@@ -99,15 +99,15 @@ static void TeachersMenu(ClassroomBooking system) {
         switch (option) {
 
             case 1:
-                system.RegistrarProfesor();
+                system.RegisterProfessor();
                 break;
 
             case 2:
-                system.EditarProfesor();
+                system.EditProfessor();
                 break;
 
             case 3:
-                system.ListarProfesores();
+                system.ListProfessors();
                 break;
         }
     } while (option != 4);
@@ -134,15 +134,15 @@ static void MenuReservations(ClassroomBooking system) {
         switch (option) {
             
             case 1:
-                system.RegistrarReserva();
+                system.RegisterReservation();
                 break;
 
             case 2:
-                system.EditarReserva();
+                system.EditReservation();
                 break;
 
             case 3:
-                system.ListarReservas();
+                system.ListReservations();
                 break;
         }
     } while (option != 4);
