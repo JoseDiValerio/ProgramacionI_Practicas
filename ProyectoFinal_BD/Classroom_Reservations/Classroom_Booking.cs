@@ -73,19 +73,37 @@ namespace Classroom_Booking
             }
         }
 
-        private bool EditClassroomCode(string code, Classroom currentClassroom)
+        private bool EditClassroomCode(string newCode, string selectedCode)
         {
-
-            foreach (Classroom classroom in classroom)
+            try
             {
-
-                if (classroom != currentClassroom && classroom.Code == code)
+                if (newCode == selectedCode)
                 {
-                    return true;
+                    return false;
+                }
+
+                Conexion conexion = new Conexion();
+
+                using (SqlConnection cn = conexion.ObtenerConexion())
+                {
+                    cn.Open();
+
+                    string sql = "SELECT COUNT(*) FROM Classroom WHERE Code = @Code";
+
+                    SqlCommand cmd = new SqlCommand(sql, cn);
+
+                    cmd.Parameters.AddWithValue("@Code", newCode);
+
+                    int cantidad = (int)cmd.ExecuteScalar();
+
+                    return cantidad > 0;
                 }
             }
-
-            return false;
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
         }
 
         private bool AddTeacherCode(string code)
@@ -134,12 +152,16 @@ namespace Classroom_Booking
                 Console.Write("\nCode: ");
                 code = Console.ReadLine() ?? "";
 
-                if (AddClassroomCode(code))
+                if (code.Trim() == "")
+                {
+                    Console.WriteLine("\nThe code cannot be empty.");
+                }
+                else if (AddClassroomCode(code))
                 {
                     Console.WriteLine("\nCode already exists.");
                 }
 
-            } while (AddClassroomCode(code));
+            } while (code.Trim() == "" || AddClassroomCode(code));
 
             name = ReadName("\nName: ");
 
@@ -246,7 +268,7 @@ namespace Classroom_Booking
                 Console.Write("\nInvalid option. Please try again: ");
             }
 
-            string selectCode = classroomCodes[option - 1];
+            string selectedCode = classroomCodes[option - 1];
 
             string code, name;
             int capacity;
@@ -256,22 +278,56 @@ namespace Classroom_Booking
                 Console.Write("\nNew code: ");
                 code = Console.ReadLine() ?? "";
 
-                if (EditClassroomCode(code, classrooms))
+                if (EditClassroomCode(code, selectedCode))
                 {
                     Console.WriteLine("Code already exists.");
                 }
 
-            } while (EditClassroomCode(code, classrooms));
+            } while (EditClassroomCode(code, selectedCode));
 
             name = ReadName("Name: ");
 
             capacity = ReadNumber("Capacity (students): ");
 
-            classrooms.Code = code;
-            classrooms.Name = name;
-            classrooms.Capacity = capacity;
+            try
+            {
+                Conexion conexion = new Conexion();
 
-            Console.WriteLine("\nClassroom successfully edited.");
+                using (SqlConnection cn = conexion.ObtenerConexion())
+                {
+                    cn.Open();
+
+                    string sql = @"UPDATE Classroom
+                       SET Code = @NewCode,
+                           Name = @Name,
+                           Capacity = @Capacity
+                       WHERE Code = @SelectedCode";
+
+                    SqlCommand cmd = new SqlCommand(sql, cn);
+
+                    cmd.Parameters.AddWithValue("@NewCode", code);
+                    cmd.Parameters.AddWithValue("@Name", name);
+                    cmd.Parameters.AddWithValue("@Capacity", capacity);
+                    cmd.Parameters.AddWithValue("@SelectedCode", selectedCode);
+
+                    int rows = cmd.ExecuteNonQuery();
+
+                    if (rows > 0)
+                    {
+                        Console.WriteLine("\nClassroom successfully edited.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nThe classroom could not be found.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nError editing classroom.");
+                Console.WriteLine(ex.Message);
+            }
+
             Console.ReadKey();
         }
 
