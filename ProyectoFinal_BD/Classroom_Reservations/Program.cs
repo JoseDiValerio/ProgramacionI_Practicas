@@ -13,12 +13,11 @@ try
         Console.WriteLine("Conectado correctamente a MySQL");
     }
 
-    Console.WriteLine("Presione una tecla para continuar...");
     Console.ReadKey();
 }
 catch (Exception ex)
 {
-    Console.WriteLine("Error al conectar con MySQL.");
+    Console.WriteLine("Error al conectar con SQL Server.");
     Console.WriteLine(ex.Message);
     Console.ReadKey();
     return;
