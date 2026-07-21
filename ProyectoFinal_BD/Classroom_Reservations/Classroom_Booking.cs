@@ -5,10 +5,6 @@ namespace Classroom_Booking
     public class ClassroomBooking
     {
 
-        private List<Classroom> classroom = new List<Classroom>();
-        private List<Teacher> teachers = new List<Teacher>();
-        private List<Booking> booking = new List<Booking>();
-
         // Validation methods
         private string ReadName(string message)
         {
@@ -108,35 +104,58 @@ namespace Classroom_Booking
 
         private bool AddTeacherCode(string code)
         {
+            Conexion conexion = new Conexion();
 
-            foreach (Teacher teacher in teachers)
+            using (SqlConnection cn = conexion.ObtenerConexion())
             {
+                cn.Open();
 
-                if (teacher.Code == code)
-                {
-                    return true;
-                }
+                string sql = "SELECT COUNT(*) FROM Teacher WHERE Code = @Code";
+
+                SqlCommand cmd = new SqlCommand(sql, cn);
+
+                cmd.Parameters.AddWithValue("@Code", code);
+
+                int total = (int)cmd.ExecuteScalar();
+
+                return total > 0;
             }
-
-            return false;
         }
 
-        private bool EditTeacherCode(string code, Teacher currentProfessor)
+        private bool EditTeacherCode(string newCode, string selectedCode)
         {
-
-            foreach (Teacher teachers in teachers)
+            try
             {
-
-                if (teachers != currentProfessor && teachers.Code == code)
+                if (newCode == selectedCode)
                 {
-                    return true;
+                    return false;
+                }
+
+                Conexion conexion = new Conexion();
+
+                using (SqlConnection cn = conexion.ObtenerConexion())
+                {
+                    cn.Open();
+
+                    string sql = "SELECT COUNT(*) FROM Teacher WHERE Code = @Code";
+
+                    SqlCommand cmd = new SqlCommand(sql, cn);
+
+                    cmd.Parameters.AddWithValue("@Code", newCode);
+
+                    int cantidad = (int)cmd.ExecuteScalar();
+
+                    return cantidad > 0;
                 }
             }
-
-            return false;
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
         }
-
-        // Main functions
+        
+        // Public functions
         public void RegisterClassroom()
         {
 
@@ -166,12 +185,6 @@ namespace Classroom_Booking
             name = ReadName("\nName: ");
 
             capacity = ReadNumber("\nCapacity (students): ");
-
-            //Classroom newClassroom = new Classroom(code, name, capacity);
-
-            //classroom.Add(newClassroom);
-
-            //Console.WriteLine("\nClassroom successfully registered.");
 
             try
             {
@@ -396,12 +409,16 @@ namespace Classroom_Booking
                 Console.Write("\nCode: ");
                 code = Console.ReadLine() ?? "";
 
-                if (AddTeacherCode(code))
+                if (code.Trim() == "")
+                {
+                    Console.WriteLine("\nThe code cannot be empty.");
+                }
+                else if (AddTeacherCode(code))
                 {
                     Console.WriteLine("\nCode already exists.");
                 }
 
-            } while (AddTeacherCode(code));
+            } while (code.Trim() == "" || AddTeacherCode(code));
 
             name = ReadName("\nName: ");
 
@@ -410,66 +427,128 @@ namespace Classroom_Booking
                 Console.Write("\nSubject: ");
                 subject = Console.ReadLine() ?? "";
 
-                if (subject == "")
+                if (subject.Trim() == "")
                 {
-                    Console.WriteLine("You must enter a subject.");
+                    Console.WriteLine("\nYou must enter a subject.");
                 }
 
-            } while (subject == "");
+            } while (subject.Trim() == "");
 
-            Teacher newTeacher = new Teacher(code, name, subject);
+            try
+            {
+                Conexion conexion = new Conexion();
 
-            teachers.Add(newTeacher);
+                using (SqlConnection cn = conexion.ObtenerConexion())
+                {
+                    cn.Open();
 
-            Console.WriteLine("\nProfessor successfully registered.");
+                    string sql = @"INSERT INTO Teacher (Code, Name, Subject)
+                           VALUES (@Code, @Name, @Subject)";
+
+                    SqlCommand cmd = new SqlCommand(sql, cn);
+
+                    cmd.Parameters.AddWithValue("@Code", code);
+                    cmd.Parameters.AddWithValue("@Name", name);
+                    cmd.Parameters.AddWithValue("@Subject", subject);
+
+                    cmd.ExecuteNonQuery();
+                }
+
+                Console.WriteLine("\nProfessor successfully registered.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nError registering professor.");
+                Console.WriteLine(ex.Message);
+            }
+
             Console.ReadKey();
         }
 
         public void EditProfessor()
         {
-
             Console.Clear();
 
             Console.WriteLine("===== EDIT TEACHER =====");
 
-            if (teachers.Count == 0)
+            List<string> teacherCodes = new List<string>();
+
+            try
             {
-                Console.WriteLine("\nThere are no registered teachers.");
+                Conexion conexion = new Conexion();
+
+                using (SqlConnection cn = conexion.ObtenerConexion())
+                {
+                    cn.Open();
+
+                    string sql = "SELECT Code, Name, Subject FROM Teacher";
+
+                    SqlCommand cmd = new SqlCommand(sql, cn);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (!reader.HasRows)
+                    {
+                        Console.WriteLine("\nThere are no registered teachers.");
+                        Console.ReadKey();
+                        return;
+                    }
+
+                    int i = 1;
+
+                    while (reader.Read())
+                    {
+                        Console.WriteLine("\nTeacher (" + i + ")");
+                        Console.WriteLine("---------------------------");
+                        Console.WriteLine("Code: " + reader["Code"]);
+                        Console.WriteLine("Name: " + reader["Name"]);
+                        Console.WriteLine("Subject: " + reader["Subject"]);
+
+                        string teacherCode = Convert.ToString(reader["Code"]) ?? "";
+                        teacherCodes.Add(teacherCode);
+
+                        i++;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nError loading teachers.");
+                Console.WriteLine(ex.Message);
                 Console.ReadKey();
                 return;
-            }
-
-            for (int i = 0; i < teachers.Count; i++)
-            {
-                Console.WriteLine("\nTeacher: (" + (i + 1) + ") " + "Code: " + teachers[i].Code + " - " + "Name: " + teachers[i].Name +
-                                  " - " + "Subject: " + teachers[i].Subject);
             }
 
             int option;
 
             Console.Write("\nSelect the teacher: ");
 
-            while (!int.TryParse(Console.ReadLine(), out option) || option < 1 || option > teachers.Count)
+            while (!int.TryParse(Console.ReadLine(), out option) ||
+                   option < 1 ||
+                   option > teacherCodes.Count)
             {
                 Console.Write("\nInvalid option. Please try again: ");
             }
 
-            Teacher teacher = teachers[option - 1];
+            string selectedCode = teacherCodes[option - 1];
 
-            string code, name;
-            string subject;
+            string code, name, subject;
 
             do
             {
                 Console.Write("\nNew code: ");
                 code = Console.ReadLine() ?? "";
 
-                if (EditTeacherCode(code, teacher))
+                if (code.Trim() == "")
+                {
+                    Console.WriteLine("\nThe code cannot be empty.");
+                }
+                else if (EditTeacherCode(code, selectedCode))
                 {
                     Console.WriteLine("\nCode already exists.");
                 }
 
-            } while (EditTeacherCode(code, teacher));
+            } while (code.Trim() == "" || EditTeacherCode(code, selectedCode));
 
             name = ReadName("\nName: ");
 
@@ -478,42 +557,100 @@ namespace Classroom_Booking
                 Console.Write("\nNew subject: ");
                 subject = Console.ReadLine() ?? "";
 
-                if (subject == "")
+                if (subject.Trim() == "")
                 {
-                    Console.WriteLine("You must enter a subject.");
+                    Console.WriteLine("\nYou must enter a subject.");
                 }
 
-            } while (subject == "");
+            } while (subject.Trim() == "");
 
-            teacher.Code = code;
-            teacher.Name = name;
-            teacher.Subject = subject;
+            try
+            {
+                Conexion conexion = new Conexion();
 
-            Console.WriteLine("\nProfessor successfully updated.");
+                using (SqlConnection cn = conexion.ObtenerConexion())
+                {
+                    cn.Open();
+
+                    string sql = @"UPDATE Teacher
+                           SET Code = @NewCode,
+                               Name = @Name,
+                               Subject = @Subject
+                           WHERE Code = @SelectedCode";
+
+                    SqlCommand cmd = new SqlCommand(sql, cn);
+
+                    cmd.Parameters.AddWithValue("@NewCode", code);
+                    cmd.Parameters.AddWithValue("@Name", name);
+                    cmd.Parameters.AddWithValue("@Subject", subject);
+                    cmd.Parameters.AddWithValue("@SelectedCode", selectedCode);
+
+                    int rows = cmd.ExecuteNonQuery();
+
+                    if (rows > 0)
+                    {
+                        Console.WriteLine("\nProfessor successfully updated.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nTeacher not found.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nError updating teacher.");
+                Console.WriteLine(ex.Message);
+            }
+
             Console.ReadKey();
         }
 
         public void ListProfessors()
         {
-
             Console.Clear();
 
             Console.WriteLine("===== LIST OF TEACHERS =====");
 
-            if (teachers.Count == 0)
+            try
             {
-                Console.WriteLine("\nThere are no registered teachers.");
-                Console.ReadKey();
-                return;
+                Conexion conexion = new Conexion();
+
+                using (SqlConnection cn = conexion.ObtenerConexion())
+                {
+                    cn.Open();
+
+                    string sql = "SELECT Code, Name, Subject FROM Teacher";
+
+                    SqlCommand cmd = new SqlCommand(sql, cn);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (!reader.HasRows)
+                    {
+                        Console.WriteLine("\nThere are no registered teachers.");
+                        Console.ReadKey();
+                        return;
+                    }
+
+                    int i = 1;
+
+                    while (reader.Read())
+                    {
+                        Console.WriteLine("\nTeacher #" + i);
+                        Console.WriteLine("----------------------------");
+                        Console.WriteLine("Code: " + reader["Code"]);
+                        Console.WriteLine("Name: " + reader["Name"]);
+                        Console.WriteLine("Subject: " + reader["Subject"]);
+
+                        i++;
+                    }
+                }
             }
-
-            for (int i = 0; i < teachers.Count; i++)
+            catch (Exception ex)
             {
-
-                Console.WriteLine("\nTeacher#" + (i + 1));
-                Console.WriteLine("\nCode: " + teachers[i].Code);
-                Console.WriteLine("Name: " + teachers[i].Name);
-                Console.WriteLine("Subject: " + teachers[i].Subject);
+                Console.WriteLine("\nError listing teachers.");
+                Console.WriteLine(ex.Message);
             }
 
             Console.ReadKey();
@@ -521,197 +658,627 @@ namespace Classroom_Booking
 
         public void RegisterReservation()
         {
-
             Console.Clear();
 
             Console.WriteLine("===== REGISTER RESERVATION =====");
 
-            if (classroom.Count == 0 && teachers.Count == 0)
+            try
             {
-                Console.WriteLine("\nYou must register at least one classroom and one teacher.");
-                Console.ReadKey();
-                return;
+                Conexion conexion = new Conexion();
 
-            }
-            else if (classroom.Count == 0)
-            {
-                Console.WriteLine("\nYou must register at least one classroom.");
-                Console.ReadKey();
-                return;
-
-            }
-            else if (teachers.Count == 0)
-            {
-                Console.WriteLine("\nYou must register at least one teacher.");
-                Console.ReadKey();
-                return;
-            }
-
-            Console.WriteLine("\nAVAILABLE CLASSROOMS\n");
-
-            for (int i = 0; i < classroom.Count; i++)
-            {
-                Console.WriteLine((i + 1) + ". " + classroom[i].Name + " (" + classroom[i].Code + ")");
-            }
-
-            int optionClassroom;
-
-            Console.Write("\nSelect a classroom: ");
-
-            while (!int.TryParse(Console.ReadLine(), out optionClassroom) || optionClassroom < 1 || optionClassroom > classroom.Count)
-            {
-                Console.Write("\nSelect the correct classroom: ");
-            }
-
-            Console.WriteLine("\nAVAILABLE TEACHERS\n");
-
-            for (int i = 0; i < teachers.Count; i++)
-            {
-                Console.WriteLine((i + 1) + ". " + teachers[i].Name + " - " + "Subject: " + teachers[i].Subject);
-            }
-
-            int teacherOption;
-
-            Console.Write("\nSelect a teacher: ");
-
-            while (!int.TryParse(Console.ReadLine(), out teacherOption) || teacherOption < 1 || teacherOption > teachers.Count)
-            {
-                Console.Write("\nSelect the correct teacher: ");
-            }
-
-            string schedule;
-
-            do
-            {
-                Console.Write("\nRESERVATION HOURS: ");
-                schedule = Console.ReadLine() ?? "";
-
-                if (schedule == "")
+                using (SqlConnection cn = conexion.ObtenerConexion())
                 {
-                    Console.WriteLine("You must enter the schedule..");
+                    cn.Open();
+
+                    string sqlClassroom = "SELECT COUNT(*) FROM Classroom";
+
+                    SqlCommand cmdClassroom = new SqlCommand(sqlClassroom, cn);
+
+                    int totalClassrooms = (int)cmdClassroom.ExecuteScalar();
+
+                    string sqlTeacher = "SELECT COUNT(*) FROM Teacher";
+
+                    SqlCommand cmdTeacher = new SqlCommand(sqlTeacher, cn);
+
+                    int totalTeachers = (int)cmdTeacher.ExecuteScalar();
+
+                    if (totalClassrooms == 0 && totalTeachers == 0)
+                    {
+                        Console.WriteLine("\nYou must register at least one classroom and one teacher.");
+                        Console.ReadKey();
+                        return;
+                    }
+                    else if (totalClassrooms == 0)
+                    {
+                        Console.WriteLine("\nYou must register at least one classroom.");
+                        Console.ReadKey();
+                        return;
+                    }
+                    else if (totalTeachers == 0)
+                    {
+                        Console.WriteLine("\nYou must register at least one teacher.");
+                        Console.ReadKey();
+                        return;
+                    }
+
+                    List<string> classroomCodes = new List<string>();
+
+                    Console.WriteLine("\nAVAILABLE CLASSROOMS\n");
+
+                    string sql = "SELECT Code, Name FROM Classroom";
+
+                    SqlCommand cmd = new SqlCommand(sql, cn);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    int i = 1;
+
+                    while (reader.Read())
+                    {
+                        Console.WriteLine(i + ". " + reader["Name"] + " (" + reader["Code"] + ")");
+
+                        classroomCodes.Add(Convert.ToString(reader["Code"]) ?? "");
+
+                        i++;
+                    }
+
+                    reader.Close();
+
+                    int optionClassroom;
+
+                    Console.Write("\nSelect a classroom: ");
+
+                    while (!int.TryParse(Console.ReadLine(), out optionClassroom) || optionClassroom < 1 || optionClassroom > classroomCodes.Count)
+                    {
+                        Console.Write("\nSelect the correct classroom: ");
+                    }
+
+                    List<string> teacherCodes = new List<string>();
+
+                    Console.WriteLine("\nAVAILABLE TEACHERS\n");
+
+                    string sqlTeacherList = "SELECT Code, Name, Subject FROM Teacher";
+
+                    SqlCommand cmdTeacherList = new SqlCommand(sqlTeacherList, cn);
+
+                    reader = cmdTeacherList.ExecuteReader();
+
+                    i = 1;
+
+                    while (reader.Read())
+                    {
+                        Console.WriteLine(i + ". " +
+                                          reader["Name"] +
+                                          " - Subject: " +
+                                          reader["Subject"]);
+
+                        teacherCodes.Add(Convert.ToString(reader["Code"]) ?? "");
+
+                        i++;
+                    }
+
+                    reader.Close();
+
+                    int teacherOption;
+
+                    Console.Write("\nSelect a teacher: ");
+
+                    while (!int.TryParse(Console.ReadLine(), out teacherOption) || teacherOption < 1 || teacherOption > teacherCodes.Count)
+                    {
+                        Console.Write("\nSelect the correct teacher: ");
+                    }
+
+                    string schedule;
+
+                    do
+                    {
+                        Console.Write("\nRESERVATION HOURS: ");
+                        schedule = Console.ReadLine() ?? "";
+
+                        if (schedule.Trim() == "")
+                        {
+                            Console.WriteLine("You must enter the schedule.");
+                        }
+
+                    } while (schedule.Trim() == "");
+
+                    string classroomCode = classroomCodes[optionClassroom - 1];
+
+                    string teacherCode = teacherCodes[teacherOption - 1];
+
+                    string sqlInsert = @"INSERT INTO Booking (ClassroomCode, TeacherCode, Schedule)
+                                       VALUES (@ClassroomCode, @TeacherCode, @Schedule)";
+
+                    SqlCommand cmdInsert = new SqlCommand(sqlInsert, cn);
+
+                    cmdInsert.Parameters.AddWithValue("@ClassroomCode", classroomCode);
+                    cmdInsert.Parameters.AddWithValue("@TeacherCode", teacherCode);
+                    cmdInsert.Parameters.AddWithValue("@Schedule", schedule);
+
+                    cmdInsert.ExecuteNonQuery();
+
+                    Console.WriteLine("\nReservation successfully recorded.");
+                    Console.ReadKey();
                 }
+            }
 
-            } while (schedule == "");
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nError registering the reservation.");
+                Console.WriteLine(ex.Message);
+            }
 
-            Booking newReservation = new Booking(classroom[optionClassroom - 1], teachers[teacherOption - 1], schedule);
-
-            booking.Add(newReservation);
-
-            Console.WriteLine("\nReservation successfully recorded.");
             Console.ReadKey();
         }
 
         public void EditReservation()
         {
-
             Console.Clear();
 
             Console.WriteLine("===== EDIT RESERVATION =====");
 
-            if (booking.Count == 0)
+            try
             {
-                Console.WriteLine("\nThere are no recorded reservations.");
-                Console.ReadKey();
-                return;
-            }
+                Conexion conexion = new Conexion();
 
-            Console.WriteLine("\nREGISTERED RESERVATIONS\n");
-
-            for (int i = 0; i < booking.Count; i++)
-            {
-
-                Console.WriteLine((i + 1) + ". " + booking[i].Teacher.Name + " - " + booking[i].Classroom.Name + " - ("
-                                    + booking[i].Teacher.Subject + ") - " + booking[i].Schedule);
-            }
-
-            int reservationOption;
-
-            Console.Write("\nSelect the reservation: ");
-
-            while (!int.TryParse(Console.ReadLine(), out reservationOption) || reservationOption < 1 || reservationOption > booking.Count)
-            {
-                Console.Write("\nSelect the correct reservation: ");
-            }
-
-            Booking bookings = booking[reservationOption - 1];
-
-            Console.WriteLine("\nCLASSROOMS\n");
-
-            for (int i = 0; i < classroom.Count; i++)
-            {
-                Console.WriteLine((i + 1) + ". " + classroom[i].Name);
-            }
-
-            int optionClassroom;
-
-            Console.Write("\nSelect a classroom: ");
-
-            while (!int.TryParse(Console.ReadLine(), out optionClassroom) || optionClassroom < 1 || optionClassroom > classroom.Count)
-            {
-                Console.Write("\nSelect the correct classroom: ");
-            }
-
-            Console.WriteLine("\nTEACHERS\n");
-
-            for (int i = 0; i < teachers.Count; i++)
-            {
-                Console.WriteLine((i + 1) + ". " + teachers[i].Name);
-            }
-
-            int teacherOption;
-
-            Console.Write("\nSelect a teacher: ");
-
-            while (!int.TryParse(Console.ReadLine(), out teacherOption) || teacherOption < 1 || teacherOption > teachers.Count)
-            {
-                Console.Write("\nSelect the correct teacher: ");
-            }
-
-            string schedule;
-
-            do
-            {
-
-                Console.Write("\nNEW SCHEDULE: ");
-                schedule = Console.ReadLine() ?? "";
-
-                if (schedule == "")
+                using (SqlConnection cn = conexion.ObtenerConexion())
                 {
-                    Console.WriteLine("You must enter the schedule.");
+                    cn.Open();
+
+                    string sql = "SELECT COUNT(*) FROM Booking";
+
+                    SqlCommand cmd = new SqlCommand(sql, cn);
+
+                    int totalReservations = (int)cmd.ExecuteScalar();
+
+                    if (totalReservations == 0)
+                    {
+                        Console.WriteLine("\nThere are no recorded reservations.");
+                        Console.ReadKey();
+                        return;
+                    }
+
+                    List<int> bookingIds = new List<int>();
+
+                    Console.WriteLine("\nREGISTERED RESERVATIONS\n");
+
+                    string sqlReservations = @" SELECT B.BookingId, T.Name AS Teacher, C.Name AS Classroom, T.Subject, B.Schedule FROM Booking B
+                                                INNER JOIN Teacher T
+                                                ON B.TeacherCode = T.Code
+                                                INNER JOIN Classroom C
+                                                ON B.ClassroomCode = C.Code";
+
+                    SqlCommand cmdReservations = new SqlCommand(sqlReservations, cn);
+
+                    SqlDataReader reader = cmdReservations.ExecuteReader();
+
+                    int i = 1;
+
+                    while (reader.Read())
+                    {
+                        Console.WriteLine(i + ". " + reader["Teacher"] + " - " + reader["Classroom"] + " - (" + reader["Subject"] + ") - " + reader["Schedule"]);
+
+                        bookingIds.Add((int)reader["BookingId"]);
+
+                        i++;
+                    }
+
+                    reader.Close();
+
+                    int reservationOption;
+
+                    Console.Write("\nSelect the reservation: ");
+
+                    while (!int.TryParse(Console.ReadLine(), out reservationOption) || reservationOption < 1 || reservationOption > bookingIds.Count)
+                    {
+                        Console.Write("Select the correct reservation: ");
+                    }
+
+                    int bookingId = bookingIds[reservationOption - 1];
+
+                    List<string> classroomCodes = new List<string>();
+
+                    Console.WriteLine("\nAVAILABLE CLASSROOMS\n");
+
+                    string sqlClassrooms = "SELECT Code, Name FROM Classroom";
+
+                    SqlCommand cmdClassrooms = new SqlCommand(sqlClassrooms, cn);
+
+                    reader = cmdClassrooms.ExecuteReader();
+
+                    i = 1;
+
+                    while (reader.Read())
+                    {
+                        Console.WriteLine(i + ". " + reader["Name"] + " (" + reader["Code"] + ")");
+
+                        classroomCodes.Add(Convert.ToString(reader["Code"]) ?? "");
+
+                        i++;
+                    }
+
+                    reader.Close();
+
+                    int optionClassroom;
+
+                    Console.Write("\nSelect a classroom: ");
+
+                    while (!int.TryParse(Console.ReadLine(), out optionClassroom) || optionClassroom < 1 || optionClassroom > classroomCodes.Count)
+                    {
+                        Console.Write("Select the correct classroom: ");
+                    }
+
+                    string classroomCode = classroomCodes[optionClassroom - 1];
+
+                    List<string> teacherCodes = new List<string>();
+
+                    Console.WriteLine("\nAVAILABLE TEACHERS\n");
+
+                    string sqlTeachers = "SELECT Code, Name, Subject FROM Teacher";
+
+                    SqlCommand cmdTeachers = new SqlCommand(sqlTeachers, cn);
+
+                    reader = cmdTeachers.ExecuteReader();
+
+                    i = 1;
+
+                    while (reader.Read())
+                    {
+                        Console.WriteLine(i + ". " + reader["Name"] + " - Subject: " + reader["Subject"]);
+
+                        teacherCodes.Add(Convert.ToString(reader["Code"]) ?? "");
+
+                        i++;
+                    }
+
+                    reader.Close();
+
+                    int teacherOption;
+
+                    Console.Write("\nSelect a teacher: ");
+
+                    while (!int.TryParse(Console.ReadLine(), out teacherOption) || teacherOption < 1 || teacherOption > teacherCodes.Count)
+                    {
+                        Console.Write("Select the correct teacher: ");
+                    }
+
+                    string teacherCode = teacherCodes[teacherOption - 1];
+
+                    string schedule;
+
+                    do
+                    {
+                        Console.Write("\nNEW SCHEDULE: ");
+                        schedule = Console.ReadLine() ?? "";
+
+                        if (schedule.Trim() == "")
+                        {
+                            Console.WriteLine("You must enter the schedule.");
+                        }
+
+                    } while (schedule.Trim() == "");
+
+                    string sqlUpdate = @"UPDATE Booking SET ClassroomCode = @ClassroomCode, TeacherCode = @TeacherCode, Schedule = @Schedule
+                                        WHERE BookingId = @BookingId";
+
+                    SqlCommand cmdUpdate = new SqlCommand(sqlUpdate, cn);
+
+                    cmdUpdate.Parameters.AddWithValue("@ClassroomCode", classroomCode);
+                    cmdUpdate.Parameters.AddWithValue("@TeacherCode", teacherCode);
+                    cmdUpdate.Parameters.AddWithValue("@Schedule", schedule);
+                    cmdUpdate.Parameters.AddWithValue("@BookingId", bookingId);
+
+                    int rows = cmdUpdate.ExecuteNonQuery();
+
+                    if (rows > 0)
+                    {
+                        Console.WriteLine("\nReservation successfully updated.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nReservation not found.");
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nError editing the reservation.");
+                Console.WriteLine(ex.Message);
+            }
 
-            } while (schedule == "");
-
-            bookings.Classroom = classroom[optionClassroom - 1];
-            bookings.Teacher = teachers[teacherOption - 1];
-            bookings.Schedule = schedule;
-
-            Console.WriteLine("\nReservation successfully updated.");
             Console.ReadKey();
         }
 
         public void ListReservations()
         {
-
             Console.Clear();
 
             Console.WriteLine("===== LIST OF RESERVATIONS =====");
 
-            if (booking.Count == 0)
+            try
             {
-                Console.WriteLine("\nThere are no reservations.");
-                Console.ReadKey();
-                return;
+                Conexion conexion = new Conexion();
+
+                using (SqlConnection cn = conexion.ObtenerConexion())
+                {
+                    cn.Open();
+
+                    string sql = @"SELECT
+                              T.Name AS Teacher,
+                              C.Name AS Classroom,
+                              T.Subject,
+                              B.Schedule
+                           FROM Booking B
+                           INNER JOIN Teacher T
+                               ON B.TeacherCode = T.Code
+                           INNER JOIN Classroom C
+                               ON B.ClassroomCode = C.Code";
+
+                    SqlCommand cmd = new SqlCommand(sql, cn);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (!reader.HasRows)
+                    {
+                        Console.WriteLine("\nThere are no reservations.");
+                        Console.ReadKey();
+                        return;
+                    }
+
+                    int i = 1;
+
+                    while (reader.Read())
+                    {
+                        Console.WriteLine("\nBooking #" + i);
+                        Console.WriteLine("----------------------------");
+                        Console.WriteLine("Teacher   : " + reader["Teacher"]);
+                        Console.WriteLine("Classroom : " + reader["Classroom"]);
+                        Console.WriteLine("Subject   : " + reader["Subject"]);
+                        Console.WriteLine("Schedule  : " + reader["Schedule"]);
+
+                        i++;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nError listing reservations.");
+                Console.WriteLine(ex.Message);
             }
 
-            for (int i = 0; i < booking.Count; i++)
-            {
+            Console.ReadKey();
+        }
 
-                Console.WriteLine("\nBooking #" + (i + 1));
-                Console.WriteLine("\nTeacher : " + booking[i].Teacher.Name);
-                Console.WriteLine("Classroom     : " + booking[i].Classroom.Name);
-                Console.WriteLine("Subject  : " + booking[i].Teacher.Subject);
-                Console.WriteLine("Schedule  : " + booking[i].Schedule);
+        public void DeleteClassroom()
+        {
+            Console.Clear();
+
+            Console.WriteLine("===== DELETE CLASSROOM =====");
+
+            try
+            {
+                Conexion conexion = new Conexion();
+
+                using (SqlConnection cn = conexion.ObtenerConexion())
+                {
+                    cn.Open();
+
+                    string sqlCount = "SELECT COUNT(*) FROM Classroom";
+
+                    SqlCommand cmdCount = new SqlCommand(sqlCount, cn);
+
+                    int total = (int)cmdCount.ExecuteScalar();
+
+                    if (total == 0)
+                    {
+                        Console.WriteLine("\nThere are no classrooms registered.");
+                        Console.ReadKey();
+                        return;
+                    }
+
+                    List<string> classroomCodes = new List<string>();
+
+                    Console.WriteLine("\nREGISTERED CLASSROOMS\n");
+
+                    string sqlList = "SELECT Code, Name, Capacity FROM Classroom";
+
+                    SqlCommand cmdList = new SqlCommand(sqlList, cn);
+
+                    SqlDataReader reader = cmdList.ExecuteReader();
+
+                    int i = 1;
+
+                    while (reader.Read())
+                    {
+                        Console.WriteLine(i + ". Code: " + reader["Code"] + " - Name: " + reader["Name"] + " - Capacity: " + reader["Capacity"]);
+
+                        classroomCodes.Add(Convert.ToString(reader["Code"]) ?? "");
+
+                        i++;
+                    }
+
+                    reader.Close();
+
+                    int option;
+
+                    Console.Write("\nSelect the classroom to delete: ");
+
+                    while (!int.TryParse(Console.ReadLine(), out option) || option < 1 || option > classroomCodes.Count)
+                    {
+                        Console.Write("Invalid option. Try again: ");
+                    }
+
+                    string classroomCode = classroomCodes[option - 1];
+
+                    string sqlCheck = @"SELECT COUNT(*)
+                                FROM Booking
+                                WHERE ClassroomCode = @Code";
+
+                    SqlCommand cmdCheck = new SqlCommand(sqlCheck, cn);
+
+                    cmdCheck.Parameters.AddWithValue("@Code", classroomCode);
+
+                    int totalReservations = (int)cmdCheck.ExecuteScalar();
+
+                    if (totalReservations > 0)
+                    {
+                        Console.WriteLine("\nThis classroom cannot be deleted because it has reservations.");
+                        Console.ReadKey();
+                        return;
+                    }
+
+                    Console.Write("\nAre you sure you want to delete this classroom? (Y/N): ");
+
+                    string answer = Console.ReadLine() ?? "";
+
+                    if (answer.ToUpper() != "Y")
+                    {
+                        Console.WriteLine("\nOperation cancelled.");
+                        Console.ReadKey();
+                        return;
+                    }
+
+                    string sqlDelete = "DELETE FROM Classroom WHERE Code = @Code";
+
+                    SqlCommand cmdDelete = new SqlCommand(sqlDelete, cn);
+
+                    cmdDelete.Parameters.AddWithValue("@Code", classroomCode);
+
+                    int rows = cmdDelete.ExecuteNonQuery();
+
+                    if (rows > 0)
+                    {
+                        Console.WriteLine("\nClassroom deleted successfully.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nThe classroom could not be deleted.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nError deleting classroom.");
+                Console.WriteLine(ex.Message);
+            }
+
+            Console.ReadKey();
+        }
+
+        public void DeleteTeacher()
+        {
+            Console.Clear();
+
+            Console.WriteLine("===== DELETE TEACHER =====");
+
+            try
+            {
+                Conexion conexion = new Conexion();
+
+                using (SqlConnection cn = conexion.ObtenerConexion())
+                {
+                    cn.Open();
+
+                    string sqlCount = "SELECT COUNT(*) FROM Teacher";
+
+                    SqlCommand cmdCount = new SqlCommand(sqlCount, cn);
+
+                    int total = (int)cmdCount.ExecuteScalar();
+
+                    if (total == 0)
+                    {
+                        Console.WriteLine("\nThere are no teachers registered.");
+                        Console.ReadKey();
+                        return;
+                    }
+
+                    // Mostrar profesores
+                    List<string> teacherCodes = new List<string>();
+
+                    Console.WriteLine("\nREGISTERED TEACHERS\n");
+
+                    string sqlList = "SELECT Code, Name, Subject FROM Teacher";
+
+                    SqlCommand cmdList = new SqlCommand(sqlList, cn);
+
+                    SqlDataReader reader = cmdList.ExecuteReader();
+
+                    int i = 1;
+
+                    while (reader.Read())
+                    {
+                        Console.WriteLine(i + ". Code: " + reader["Code"] + " - Name: " + reader["Name"] +
+
+                                            " - Subject: " + reader["Subject"]);
+
+                        teacherCodes.Add(Convert.ToString(reader["Code"]) ?? "");
+
+                        i++;
+                    }
+
+                    reader.Close();
+
+                    int option;
+
+                    Console.Write("\nSelect the teacher to delete: ");
+
+                    while (!int.TryParse(Console.ReadLine(), out option) || option < 1 || option > teacherCodes.Count)
+                    {
+                        Console.Write("Invalid option. Try again: ");
+                    }
+
+                    string teacherCode = teacherCodes[option - 1];
+
+                    string sqlCheck = @"SELECT COUNT(*)
+                                FROM Booking
+                                WHERE TeacherCode = @Code";
+
+                    SqlCommand cmdCheck = new SqlCommand(sqlCheck, cn);
+
+                    cmdCheck.Parameters.AddWithValue("@Code", teacherCode);
+
+                    int totalReservations = (int)cmdCheck.ExecuteScalar();
+
+                    if (totalReservations > 0)
+                    {
+                        Console.WriteLine("\nThis teacher cannot be deleted because it has reservations.");
+                        Console.ReadKey();
+                        return;
+                    }
+
+                    Console.Write("\nAre you sure you want to delete this teacher? (Y/N): ");
+
+                    string answer = Console.ReadLine() ?? "";
+
+                    if (answer.ToUpper() != "Y")
+                    {
+                        Console.WriteLine("\nOperation cancelled.");
+                        Console.ReadKey();
+                        return;
+                    }
+
+                    string sqlDelete = "DELETE FROM Teacher WHERE Code = @Code";
+
+                    SqlCommand cmdDelete = new SqlCommand(sqlDelete, cn);
+
+                    cmdDelete.Parameters.AddWithValue("@Code", teacherCode);
+
+                    int rows = cmdDelete.ExecuteNonQuery();
+
+                    if (rows > 0)
+                    {
+                        Console.WriteLine("\nTeacher deleted successfully.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nThe teacher could not be deleted.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nError deleting teacher.");
+                Console.WriteLine(ex.Message);
             }
 
             Console.ReadKey();

@@ -79,11 +79,12 @@ static void ClassroomsMenu(ClassroomBooking system)
         Console.WriteLine("\n\t1. Register Classroom");
         Console.WriteLine("\t2. Edit Classroom");
         Console.WriteLine("\t3. List Classrooms");
-        Console.WriteLine("\t4. Return");
+        Console.WriteLine("\t4. Delete Classroom");
+        Console.WriteLine("\t5. Return");
 
         Console.Write("\nSelect an option: ");
 
-        while (!int.TryParse(Console.ReadLine(), out option) || option < 1 || option > 4)
+        while (!int.TryParse(Console.ReadLine(), out option) || option < 1 || option > 5)
         {
             Console.Write("\nInvalid option. Please try again: ");
         }
@@ -102,8 +103,12 @@ static void ClassroomsMenu(ClassroomBooking system)
             case 3:
                 system.ListClassrooms();
                 break;
+
+            case 4:
+                system.DeleteClassroom();
+                break;
         }
-    } while (option != 4);
+    } while (option != 5);
 }
 static void TeachersMenu(ClassroomBooking system)
 {
@@ -118,11 +123,12 @@ static void TeachersMenu(ClassroomBooking system)
         Console.WriteLine("\n\t1. Register Professor");
         Console.WriteLine("\t2. Edit Professor");
         Console.WriteLine("\t3. List Professors");
-        Console.WriteLine("\t4. Return");
+        Console.WriteLine("\t4. Delete Teacher");
+        Console.WriteLine("\t5. Return");
 
         Console.Write("\nSelect an option: ");
 
-        while (!int.TryParse(Console.ReadLine(), out option) || option < 1 || option > 4)
+        while (!int.TryParse(Console.ReadLine(), out option) || option < 1 || option > 5)
         {
             Console.Write("\nInvalid option. Please try again: ");
         }
@@ -141,8 +147,15 @@ static void TeachersMenu(ClassroomBooking system)
             case 3:
                 system.ListProfessors();
                 break;
+
+            case 4:
+                system.DeleteTeacher();
+                break;
+
+            case 5:
+                break;
         }
-    } while (option != 4);
+    } while (option != 5);
 }
 static void MenuReservations(ClassroomBooking system)
 {
