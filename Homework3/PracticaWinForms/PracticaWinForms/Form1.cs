@@ -28,7 +28,8 @@ namespace PracticaWinForms
                 string.IsNullOrEmpty(textCorreo.Text) ||
                 string.IsNullOrEmpty(textTelefono.Text))
             {
-                MessageBox.Show("Debe completar todos los campos.");
+                MessageBox.Show(this, "Debe completar todos los campos.", "Advertencia.", MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
                 return;
             }
 
@@ -43,7 +44,7 @@ namespace PracticaWinForms
 
             MostrarContactos();
 
-            MessageBox.Show("Contacto guardado.");
+            MessageBox.Show(this, "Contacto guardado.", "Guardar", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             textNombre.Clear();
             textApellido.Clear();
@@ -66,6 +67,14 @@ namespace PracticaWinForms
         private void bSalir_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            textNombre.Clear();
+            textApellido.Clear();
+            textCorreo.Clear();
+            textTelefono.Clear();
         }
     }
 }

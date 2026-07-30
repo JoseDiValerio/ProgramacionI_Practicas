@@ -89,28 +89,28 @@
             textNombre.Location = new Point(150, 57);
             textNombre.Name = "textNombre";
             textNombre.Size = new Size(320, 23);
-            textNombre.TabIndex = 4;
+            textNombre.TabIndex = 0;
             // 
             // textTelefono
             // 
             textTelefono.Location = new Point(150, 207);
             textTelefono.Name = "textTelefono";
             textTelefono.Size = new Size(320, 23);
-            textTelefono.TabIndex = 5;
+            textTelefono.TabIndex = 3;
             // 
             // textCorreo
             // 
             textCorreo.Location = new Point(150, 157);
             textCorreo.Name = "textCorreo";
             textCorreo.Size = new Size(320, 23);
-            textCorreo.TabIndex = 6;
+            textCorreo.TabIndex = 2;
             // 
             // textApellido
             // 
             textApellido.Location = new Point(150, 107);
             textApellido.Name = "textApellido";
             textApellido.Size = new Size(320, 23);
-            textApellido.TabIndex = 7;
+            textApellido.TabIndex = 1;
             // 
             // button1
             // 
@@ -118,7 +118,7 @@
             button1.Location = new Point(50, 280);
             button1.Name = "button1";
             button1.Size = new Size(120, 40);
-            button1.TabIndex = 8;
+            button1.TabIndex = 4;
             button1.Text = "Guardar";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
@@ -129,9 +129,10 @@
             button2.Location = new Point(200, 280);
             button2.Name = "button2";
             button2.Size = new Size(120, 40);
-            button2.TabIndex = 9;
+            button2.TabIndex = 5;
             button2.Text = "Borrar";
             button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
             // 
             // bSalir
             // 
@@ -139,7 +140,7 @@
             bSalir.Location = new Point(350, 280);
             bSalir.Name = "bSalir";
             bSalir.Size = new Size(120, 40);
-            bSalir.TabIndex = 10;
+            bSalir.TabIndex = 6;
             bSalir.Text = "Salir";
             bSalir.UseVisualStyleBackColor = true;
             bSalir.Click += bSalir_Click;
@@ -181,6 +182,7 @@
             Controls.Add(label2);
             Controls.Add(label1);
             Name = "Form1";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
             Load += Form1_Load;
             ResumeLayout(false);
