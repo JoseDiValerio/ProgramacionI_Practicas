@@ -10,7 +10,7 @@ namespace PracticaWinForms
 
             foreach (Contacto contacto in contactos)
             {
-                listContactos.Items.Add(contacto.Nombre + " " + contacto.Apellido + " " + contacto.Telefono);
+                listContactos.Items.Add(contacto.Nombre + " " + contacto.Apellido + " " + contacto.Telefono + " " + contacto.Correo);
             }
         }
 
@@ -51,7 +51,7 @@ namespace PracticaWinForms
             textCorreo.Clear();
             textTelefono.Clear();
 
-            textCorreo.Focus();
+            textNombre.Focus();
         }
 
         private void label4_Click(object sender, EventArgs e)
