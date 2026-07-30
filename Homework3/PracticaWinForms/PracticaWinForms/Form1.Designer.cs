@@ -32,14 +32,15 @@
             label2 = new Label();
             label3 = new Label();
             label4 = new Label();
-            textBox1 = new TextBox();
-            textBox2 = new TextBox();
-            textBox3 = new TextBox();
-            textBox4 = new TextBox();
+            textNombre = new TextBox();
+            textTelefono = new TextBox();
+            textCorreo = new TextBox();
+            textApellido = new TextBox();
             button1 = new Button();
             button2 = new Button();
-            button3 = new Button();
-            maskedTextBox1 = new MaskedTextBox();
+            bSalir = new Button();
+            listContactos = new ListBox();
+            label5 = new Label();
             SuspendLayout();
             // 
             // label1
@@ -83,38 +84,38 @@
             label4.Text = "Telefono:";
             label4.Click += label4_Click;
             // 
-            // textBox1
+            // textNombre
             // 
-            textBox1.Location = new Point(150, 57);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(283, 23);
-            textBox1.TabIndex = 4;
+            textNombre.Location = new Point(150, 57);
+            textNombre.Name = "textNombre";
+            textNombre.Size = new Size(320, 23);
+            textNombre.TabIndex = 4;
             // 
-            // textBox2
+            // textTelefono
             // 
-            textBox2.Location = new Point(150, 207);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(283, 23);
-            textBox2.TabIndex = 5;
+            textTelefono.Location = new Point(150, 207);
+            textTelefono.Name = "textTelefono";
+            textTelefono.Size = new Size(320, 23);
+            textTelefono.TabIndex = 5;
             // 
-            // textBox3
+            // textCorreo
             // 
-            textBox3.Location = new Point(150, 157);
-            textBox3.Name = "textBox3";
-            textBox3.Size = new Size(283, 23);
-            textBox3.TabIndex = 6;
+            textCorreo.Location = new Point(150, 157);
+            textCorreo.Name = "textCorreo";
+            textCorreo.Size = new Size(320, 23);
+            textCorreo.TabIndex = 6;
             // 
-            // textBox4
+            // textApellido
             // 
-            textBox4.Location = new Point(150, 107);
-            textBox4.Name = "textBox4";
-            textBox4.Size = new Size(283, 23);
-            textBox4.TabIndex = 7;
+            textApellido.Location = new Point(150, 107);
+            textApellido.Name = "textApellido";
+            textApellido.Size = new Size(320, 23);
+            textApellido.TabIndex = 7;
             // 
             // button1
             // 
-            button1.Font = new Font("Segoe UI", 15.75F);
-            button1.Location = new Point(150, 300);
+            button1.Font = new Font("Segoe UI Semibold", 15.75F, FontStyle.Bold);
+            button1.Location = new Point(50, 280);
             button1.Name = "button1";
             button1.Size = new Size(120, 40);
             button1.TabIndex = 8;
@@ -124,45 +125,57 @@
             // 
             // button2
             // 
-            button2.Font = new Font("Segoe UI", 15.75F);
-            button2.Location = new Point(300, 300);
+            button2.Font = new Font("Segoe UI Semibold", 15.75F, FontStyle.Bold);
+            button2.Location = new Point(200, 280);
             button2.Name = "button2";
             button2.Size = new Size(120, 40);
             button2.TabIndex = 9;
             button2.Text = "Borrar";
             button2.UseVisualStyleBackColor = true;
             // 
-            // button3
+            // bSalir
             // 
-            button3.Font = new Font("Segoe UI", 15.75F);
-            button3.Location = new Point(450, 300);
-            button3.Name = "button3";
-            button3.Size = new Size(120, 40);
-            button3.TabIndex = 10;
-            button3.Text = "Cancelar";
-            button3.UseVisualStyleBackColor = true;
+            bSalir.Font = new Font("Segoe UI Semibold", 15.75F, FontStyle.Bold);
+            bSalir.Location = new Point(350, 280);
+            bSalir.Name = "bSalir";
+            bSalir.Size = new Size(120, 40);
+            bSalir.TabIndex = 10;
+            bSalir.Text = "Salir";
+            bSalir.UseVisualStyleBackColor = true;
+            bSalir.Click += bSalir_Click;
             // 
-            // maskedTextBox1
+            // listContactos
             // 
-            maskedTextBox1.Location = new Point(150, 247);
-            maskedTextBox1.Mask = "(999)000-0000";
-            maskedTextBox1.Name = "maskedTextBox1";
-            maskedTextBox1.Size = new Size(283, 23);
-            maskedTextBox1.TabIndex = 11;
+            listContactos.FormattingEnabled = true;
+            listContactos.Location = new Point(530, 60);
+            listContactos.Name = "listContactos";
+            listContactos.Size = new Size(400, 259);
+            listContactos.TabIndex = 11;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label5.Location = new Point(660, 30);
+            label5.Name = "label5";
+            label5.Size = new Size(142, 21);
+            label5.TabIndex = 12;
+            label5.Text = "Lista de contactos";
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(684, 411);
-            Controls.Add(maskedTextBox1);
-            Controls.Add(button3);
+            ClientSize = new Size(984, 361);
+            Controls.Add(label5);
+            Controls.Add(listContactos);
+            Controls.Add(bSalir);
             Controls.Add(button2);
             Controls.Add(button1);
-            Controls.Add(textBox4);
-            Controls.Add(textBox3);
-            Controls.Add(textBox2);
-            Controls.Add(textBox1);
+            Controls.Add(textApellido);
+            Controls.Add(textCorreo);
+            Controls.Add(textTelefono);
+            Controls.Add(textNombre);
             Controls.Add(label4);
             Controls.Add(label3);
             Controls.Add(label2);
@@ -180,13 +193,14 @@
         private Label label2;
         private Label label3;
         private Label label4;
-        private TextBox textBox1;
-        private TextBox textBox2;
-        private TextBox textBox3;
-        private TextBox textBox4;
+        private TextBox textNombre;
+        private TextBox textTelefono;
+        private TextBox textCorreo;
+        private TextBox textApellido;
         private Button button1;
         private Button button2;
-        private Button button3;
-        private MaskedTextBox maskedTextBox1;
+        private Button bSalir;
+        private ListBox listContactos;
+        private Label label5;
     }
 }
