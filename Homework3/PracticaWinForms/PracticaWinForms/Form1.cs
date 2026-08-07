@@ -76,5 +76,10 @@ namespace PracticaWinForms
             textCorreo.Clear();
             textTelefono.Clear();
         }
+
+        private void listContactos_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

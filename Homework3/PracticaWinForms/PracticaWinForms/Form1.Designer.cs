@@ -152,6 +152,7 @@
             listContactos.Name = "listContactos";
             listContactos.Size = new Size(400, 259);
             listContactos.TabIndex = 11;
+            listContactos.SelectedIndexChanged += listContactos_SelectedIndexChanged;
             // 
             // label5
             // 
