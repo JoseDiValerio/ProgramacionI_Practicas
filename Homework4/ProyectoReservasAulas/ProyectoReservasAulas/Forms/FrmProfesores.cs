@@ -1,12 +1,4 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.ComponentModel;
-//using System.Data;
-//using System.Drawing;
-//using System.Text;
-//using System.Windows.Forms;
-
-using ProyectoReservasAulas.Data;
+﻿using ProyectoReservasAulas.Data;
 using ProyectoReservasAulas.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +19,7 @@ namespace ProyectoReservasAulas.Forms
             CargarProfesores();
             BloquearCampos();
             btnGuardar.Enabled = false;
+            timer1.Start();
         }
 
         // MOTODOS PRINCIPALES
@@ -42,6 +35,7 @@ namespace ProyectoReservasAulas.Forms
 
             editando = false;
             txtNombre.Enabled = false;
+            txtMateria.Enabled = false;
             txtCorreo.Enabled = false;
             btnGuardar.Enabled = false;
 
@@ -380,6 +374,13 @@ namespace ProyectoReservasAulas.Forms
             }
 
             dgvProfesores.Columns["Id"].Visible = false;
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            lblFecha.Text = "Fecha: " + DateTime.Now.ToString("dd/MM/yyyy");
+
+            lblHora.Text = "Hora: " + DateTime.Now.ToString("hh:mm:ss tt");
         }
     }
 }

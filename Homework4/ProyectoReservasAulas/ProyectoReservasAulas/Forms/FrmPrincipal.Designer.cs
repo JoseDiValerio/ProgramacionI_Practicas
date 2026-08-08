@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             label1 = new Label();
-            button1 = new Button();
-            button2 = new Button();
-            button3 = new Button();
-            button4 = new Button();
+            btnAulas = new Button();
+            btnProfesores = new Button();
+            btnReservas = new Button();
+            btnSalir = new Button();
             SuspendLayout();
             // 
             // label1
@@ -46,53 +46,53 @@
             label1.TabIndex = 0;
             label1.Text = "CONTROL DE RESERVAS DE AULAS";
             // 
-            // button1
+            // btnAulas
             // 
-            button1.BackColor = Color.RoyalBlue;
-            button1.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold);
-            button1.Location = new Point(296, 108);
-            button1.Name = "button1";
-            button1.Size = new Size(220, 55);
-            button1.TabIndex = 1;
-            button1.Text = "AULAS";
-            button1.UseVisualStyleBackColor = false;
-            button1.Click += button1_Click;
+            btnAulas.BackColor = Color.RoyalBlue;
+            btnAulas.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold);
+            btnAulas.Location = new Point(296, 108);
+            btnAulas.Name = "btnAulas";
+            btnAulas.Size = new Size(220, 55);
+            btnAulas.TabIndex = 0;
+            btnAulas.Text = "AULAS";
+            btnAulas.UseVisualStyleBackColor = false;
+            btnAulas.Click += btnAulas_Click;
             // 
-            // button2
+            // btnProfesores
             // 
-            button2.BackColor = Color.RoyalBlue;
-            button2.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold);
-            button2.Location = new Point(296, 192);
-            button2.Name = "button2";
-            button2.Size = new Size(220, 55);
-            button2.TabIndex = 2;
-            button2.Text = "PROFESORES";
-            button2.UseVisualStyleBackColor = false;
-            button2.Click += button2_Click;
+            btnProfesores.BackColor = Color.RoyalBlue;
+            btnProfesores.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold);
+            btnProfesores.Location = new Point(296, 192);
+            btnProfesores.Name = "btnProfesores";
+            btnProfesores.Size = new Size(220, 55);
+            btnProfesores.TabIndex = 1;
+            btnProfesores.Text = "PROFESORES";
+            btnProfesores.UseVisualStyleBackColor = false;
+            btnProfesores.Click += btnProfesores_Click;
             // 
-            // button3
+            // btnReservas
             // 
-            button3.BackColor = Color.RoyalBlue;
-            button3.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold);
-            button3.Location = new Point(296, 278);
-            button3.Name = "button3";
-            button3.Size = new Size(220, 55);
-            button3.TabIndex = 3;
-            button3.Text = "RESERVAS";
-            button3.UseVisualStyleBackColor = false;
-            button3.Click += button3_Click;
+            btnReservas.BackColor = Color.RoyalBlue;
+            btnReservas.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold);
+            btnReservas.Location = new Point(296, 278);
+            btnReservas.Name = "btnReservas";
+            btnReservas.Size = new Size(220, 55);
+            btnReservas.TabIndex = 2;
+            btnReservas.Text = "RESERVAS";
+            btnReservas.UseVisualStyleBackColor = false;
+            btnReservas.Click += btnReservas_Click;
             // 
-            // button4
+            // btnSalir
             // 
-            button4.BackColor = Color.RoyalBlue;
-            button4.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold);
-            button4.Location = new Point(296, 360);
-            button4.Name = "button4";
-            button4.Size = new Size(220, 55);
-            button4.TabIndex = 4;
-            button4.Text = "SALIR";
-            button4.UseVisualStyleBackColor = false;
-            button4.Click += button4_Click;
+            btnSalir.BackColor = Color.RoyalBlue;
+            btnSalir.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold);
+            btnSalir.Location = new Point(296, 360);
+            btnSalir.Name = "btnSalir";
+            btnSalir.Size = new Size(220, 55);
+            btnSalir.TabIndex = 3;
+            btnSalir.Text = "SALIR";
+            btnSalir.UseVisualStyleBackColor = false;
+            btnSalir.Click += btnSalir_Click;
             // 
             // FrmPrincipal
             // 
@@ -100,10 +100,10 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.WhiteSmoke;
             ClientSize = new Size(884, 461);
-            Controls.Add(button4);
-            Controls.Add(button3);
-            Controls.Add(button2);
-            Controls.Add(button1);
+            Controls.Add(btnSalir);
+            Controls.Add(btnReservas);
+            Controls.Add(btnProfesores);
+            Controls.Add(btnAulas);
             Controls.Add(label1);
             ForeColor = SystemColors.Window;
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -119,9 +119,9 @@
         #endregion
 
         private Label label1;
-        private Button button1;
-        private Button button2;
-        private Button button3;
-        private Button button4;
+        private Button btnAulas;
+        private Button btnProfesores;
+        private Button btnReservas;
+        private Button btnSalir;
     }
 }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             btnLimpiar = new Button();
             btnSalir = new Button();
             btnEliminar = new Button();
@@ -45,6 +46,9 @@
             txtBuscar = new TextBox();
             txtMateria = new TextBox();
             lblMateria = new Label();
+            lblHora = new Label();
+            lblFecha = new Label();
+            timer1 = new System.Windows.Forms.Timer(components);
             ((System.ComponentModel.ISupportInitialize)dgvProfesores).BeginInit();
             SuspendLayout();
             // 
@@ -54,7 +58,7 @@
             btnLimpiar.Location = new Point(550, 238);
             btnLimpiar.Name = "btnLimpiar";
             btnLimpiar.Size = new Size(85, 30);
-            btnLimpiar.TabIndex = 22;
+            btnLimpiar.TabIndex = 8;
             btnLimpiar.Text = "Limpiar";
             btnLimpiar.UseVisualStyleBackColor = true;
             btnLimpiar.Click += btnLimpiar_Click;
@@ -65,7 +69,7 @@
             btnSalir.Location = new Point(650, 238);
             btnSalir.Name = "btnSalir";
             btnSalir.Size = new Size(85, 30);
-            btnSalir.TabIndex = 21;
+            btnSalir.TabIndex = 9;
             btnSalir.Text = "Salir";
             btnSalir.UseVisualStyleBackColor = true;
             btnSalir.Click += btnSalir_Click;
@@ -76,7 +80,7 @@
             btnEliminar.Location = new Point(450, 238);
             btnEliminar.Name = "btnEliminar";
             btnEliminar.Size = new Size(85, 30);
-            btnEliminar.TabIndex = 20;
+            btnEliminar.TabIndex = 7;
             btnEliminar.Text = "Eliminar";
             btnEliminar.UseVisualStyleBackColor = true;
             btnEliminar.Click += btnEliminar_Click;
@@ -87,7 +91,7 @@
             btnEditar.Location = new Point(350, 238);
             btnEditar.Name = "btnEditar";
             btnEditar.Size = new Size(85, 30);
-            btnEditar.TabIndex = 19;
+            btnEditar.TabIndex = 6;
             btnEditar.Text = "Editar";
             btnEditar.UseVisualStyleBackColor = true;
             btnEditar.Click += btnEditar_Click;
@@ -98,7 +102,7 @@
             btnGuardar.Location = new Point(250, 238);
             btnGuardar.Name = "btnGuardar";
             btnGuardar.Size = new Size(85, 30);
-            btnGuardar.TabIndex = 18;
+            btnGuardar.TabIndex = 5;
             btnGuardar.Text = "Guardar";
             btnGuardar.UseVisualStyleBackColor = true;
             btnGuardar.Click += btnGuardar_Click;
@@ -109,7 +113,7 @@
             btnNuevo.Location = new Point(150, 238);
             btnNuevo.Name = "btnNuevo";
             btnNuevo.Size = new Size(85, 30);
-            btnNuevo.TabIndex = 17;
+            btnNuevo.TabIndex = 4;
             btnNuevo.Text = "Nuevo";
             btnNuevo.UseVisualStyleBackColor = true;
             btnNuevo.Click += btnNuevo_Click;
@@ -137,16 +141,16 @@
             // 
             // txtNombre
             // 
-            txtNombre.Location = new Point(420, 85);
+            txtNombre.Location = new Point(354, 87);
             txtNombre.Name = "txtNombre";
             txtNombre.Size = new Size(195, 23);
-            txtNombre.TabIndex = 26;
+            txtNombre.TabIndex = 0;
             // 
             // lblNombre
             // 
             lblNombre.AutoSize = true;
             lblNombre.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblNombre.Location = new Point(248, 85);
+            lblNombre.Location = new Point(182, 87);
             lblNombre.Name = "lblNombre";
             lblNombre.Size = new Size(153, 21);
             lblNombre.TabIndex = 25;
@@ -154,16 +158,16 @@
             // 
             // txtCorreo
             // 
-            txtCorreo.Location = new Point(420, 155);
+            txtCorreo.Location = new Point(354, 157);
             txtCorreo.Name = "txtCorreo";
             txtCorreo.Size = new Size(195, 23);
-            txtCorreo.TabIndex = 28;
+            txtCorreo.TabIndex = 2;
             // 
             // lblCorreo
             // 
             lblCorreo.AutoSize = true;
             lblCorreo.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblCorreo.Location = new Point(336, 157);
+            lblCorreo.Location = new Point(270, 159);
             lblCorreo.Name = "lblCorreo";
             lblCorreo.Size = new Size(65, 21);
             lblCorreo.TabIndex = 27;
@@ -180,14 +184,14 @@
             dgvProfesores.ReadOnly = true;
             dgvProfesores.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvProfesores.Size = new Size(800, 160);
-            dgvProfesores.TabIndex = 29;
+            dgvProfesores.TabIndex = 10;
             dgvProfesores.CellClick += dgvProfesores_CellClick;
             // 
             // lblBusqueda
             // 
             lblBusqueda.AutoSize = true;
             lblBusqueda.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblBusqueda.Location = new Point(315, 195);
+            lblBusqueda.Location = new Point(249, 197);
             lblBusqueda.Name = "lblBusqueda";
             lblBusqueda.Size = new Size(86, 21);
             lblBusqueda.TabIndex = 30;
@@ -195,34 +199,62 @@
             // 
             // txtBuscar
             // 
-            txtBuscar.Location = new Point(420, 193);
+            txtBuscar.Location = new Point(354, 195);
             txtBuscar.Name = "txtBuscar";
             txtBuscar.Size = new Size(195, 23);
-            txtBuscar.TabIndex = 31;
+            txtBuscar.TabIndex = 3;
             txtBuscar.TextChanged += txtBuscar_TextChanged;
             // 
             // txtMateria
             // 
-            txtMateria.Location = new Point(420, 120);
+            txtMateria.Location = new Point(354, 122);
             txtMateria.Name = "txtMateria";
             txtMateria.Size = new Size(195, 23);
-            txtMateria.TabIndex = 33;
+            txtMateria.TabIndex = 1;
             // 
             // lblMateria
             // 
             lblMateria.AutoSize = true;
             lblMateria.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblMateria.Location = new Point(331, 122);
+            lblMateria.Location = new Point(265, 124);
             lblMateria.Name = "lblMateria";
             lblMateria.Size = new Size(70, 21);
             lblMateria.TabIndex = 32;
             lblMateria.Text = "Materia:";
+            // 
+            // lblHora
+            // 
+            lblHora.AutoSize = true;
+            lblHora.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold);
+            lblHora.Location = new Point(650, 121);
+            lblHora.Name = "lblHora";
+            lblHora.Size = new Size(47, 20);
+            lblHora.TabIndex = 34;
+            lblHora.Text = "Hora:";
+            // 
+            // lblFecha
+            // 
+            lblFecha.AutoSize = true;
+            lblFecha.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold);
+            lblFecha.Location = new Point(650, 86);
+            lblFecha.Name = "lblFecha";
+            lblFecha.Size = new Size(53, 20);
+            lblFecha.TabIndex = 33;
+            lblFecha.Text = "Fecha:";
+            // 
+            // timer1
+            // 
+            timer1.Enabled = true;
+            timer1.Interval = 1000;
+            timer1.Tick += timer1_Tick;
             // 
             // FrmProfesores
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(884, 461);
+            Controls.Add(lblHora);
+            Controls.Add(lblFecha);
             Controls.Add(txtMateria);
             Controls.Add(lblMateria);
             Controls.Add(txtBuscar);
@@ -268,5 +300,8 @@
         private TextBox txtBuscar;
         private TextBox txtMateria;
         private Label lblMateria;
+        private Label lblHora;
+        private Label lblFecha;
+        private System.Windows.Forms.Timer timer1;
     }
 }

@@ -16,25 +16,44 @@ namespace ProyectoReservasAulas.Forms
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void FrmPrincipal_Load(object sender, EventArgs e)
         {
+            if (Conexion.ProbarConexion())
+            {
+                MessageBox.Show(
+                    "Conexión realizada correctamente.",
+                    "Éxito",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+        }
+
+        // BOTONES
+        private void btnAulas_Click(object sender, EventArgs e)
+        {
+            this.Hide();
             FrmAulas frm = new FrmAulas();
             frm.ShowDialog();
+            this.Show();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void btnProfesores_Click(object sender, EventArgs e)
         {
+            this.Hide();
             FrmProfesores frm = new FrmProfesores();
             frm.ShowDialog();
+            this.Show();
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void btnReservas_Click(object sender, EventArgs e)
         {
+            this.Hide();
             FrmReservas frm = new FrmReservas();
             frm.ShowDialog();
+            this.Show();
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void btnSalir_Click(object sender, EventArgs e)
         {
             DialogResult respuesta;
 
@@ -47,18 +66,6 @@ namespace ProyectoReservasAulas.Forms
             if (respuesta == DialogResult.Yes)
             {
                 Application.Exit();
-            }
-        }
-
-        private void FrmPrincipal_Load(object sender, EventArgs e)
-        {
-            if (Conexion.ProbarConexion())
-            {
-                MessageBox.Show(
-                    "Conexión realizada correctamente.",
-                    "Éxito",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
             }
         }
     }

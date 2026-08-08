@@ -98,14 +98,14 @@
             txtCodigo.Location = new Point(140, 49);
             txtCodigo.Name = "txtCodigo";
             txtCodigo.Size = new Size(100, 23);
-            txtCodigo.TabIndex = 4;
+            txtCodigo.TabIndex = 0;
             // 
             // txtNombre
             // 
             txtNombre.Location = new Point(140, 88);
             txtNombre.Name = "txtNombre";
             txtNombre.Size = new Size(100, 23);
-            txtNombre.TabIndex = 5;
+            txtNombre.TabIndex = 1;
             // 
             // nudCapacidad
             // 
@@ -113,7 +113,7 @@
             nudCapacidad.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             nudCapacidad.Name = "nudCapacidad";
             nudCapacidad.Size = new Size(100, 23);
-            nudCapacidad.TabIndex = 6;
+            nudCapacidad.TabIndex = 2;
             nudCapacidad.TextAlign = HorizontalAlignment.Center;
             nudCapacidad.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
@@ -122,7 +122,7 @@
             txtBuscar.Location = new Point(140, 179);
             txtBuscar.Name = "txtBuscar";
             txtBuscar.Size = new Size(100, 23);
-            txtBuscar.TabIndex = 7;
+            txtBuscar.TabIndex = 3;
             txtBuscar.TextChanged += txtBuscar_TextChanged;
             // 
             // btnNuevo
@@ -131,7 +131,7 @@
             btnNuevo.Location = new Point(40, 229);
             btnNuevo.Name = "btnNuevo";
             btnNuevo.Size = new Size(85, 30);
-            btnNuevo.TabIndex = 9;
+            btnNuevo.TabIndex = 4;
             btnNuevo.Text = "Nuevo";
             btnNuevo.UseVisualStyleBackColor = true;
             btnNuevo.Click += btnNuevo_Click;
@@ -142,7 +142,7 @@
             btnGuardar.Location = new Point(140, 229);
             btnGuardar.Name = "btnGuardar";
             btnGuardar.Size = new Size(85, 30);
-            btnGuardar.TabIndex = 10;
+            btnGuardar.TabIndex = 5;
             btnGuardar.Text = "Guardar";
             btnGuardar.UseVisualStyleBackColor = true;
             btnGuardar.Click += btnGuardar_Click;
@@ -153,7 +153,7 @@
             btnEditar.Location = new Point(240, 229);
             btnEditar.Name = "btnEditar";
             btnEditar.Size = new Size(85, 30);
-            btnEditar.TabIndex = 11;
+            btnEditar.TabIndex = 6;
             btnEditar.Text = "Editar";
             btnEditar.UseVisualStyleBackColor = true;
             btnEditar.Click += btnEditar_Click;
@@ -164,7 +164,7 @@
             btnEliminar.Location = new Point(340, 229);
             btnEliminar.Name = "btnEliminar";
             btnEliminar.Size = new Size(85, 30);
-            btnEliminar.TabIndex = 12;
+            btnEliminar.TabIndex = 7;
             btnEliminar.Text = "Eliminar";
             btnEliminar.UseVisualStyleBackColor = true;
             btnEliminar.Click += btnEliminar_Click;
@@ -175,7 +175,7 @@
             btnSalir.Location = new Point(540, 229);
             btnSalir.Name = "btnSalir";
             btnSalir.Size = new Size(85, 30);
-            btnSalir.TabIndex = 13;
+            btnSalir.TabIndex = 9;
             btnSalir.Text = "Salir";
             btnSalir.UseVisualStyleBackColor = true;
             btnSalir.Click += btnSalir_Click;
@@ -191,7 +191,7 @@
             dgvAulas.ReadOnly = true;
             dgvAulas.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvAulas.Size = new Size(800, 150);
-            dgvAulas.TabIndex = 15;
+            dgvAulas.TabIndex = 10;
             dgvAulas.CellClick += dgvAulas_CellClick;
             // 
             // btnLimpiar
@@ -200,7 +200,7 @@
             btnLimpiar.Location = new Point(440, 229);
             btnLimpiar.Name = "btnLimpiar";
             btnLimpiar.Size = new Size(85, 30);
-            btnLimpiar.TabIndex = 16;
+            btnLimpiar.TabIndex = 8;
             btnLimpiar.Text = "Limpiar";
             btnLimpiar.UseVisualStyleBackColor = true;
             btnLimpiar.Click += btnLimpiar_Click;
@@ -228,6 +228,7 @@
             // 
             // timer1
             // 
+            timer1.Enabled = true;
             timer1.Interval = 1000;
             timer1.Tick += timer1_Tick;
             // 
