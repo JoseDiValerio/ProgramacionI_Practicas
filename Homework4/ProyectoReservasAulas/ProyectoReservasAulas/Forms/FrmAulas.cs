@@ -15,6 +15,7 @@ namespace ProyectoReservasAulas.Forms
     public partial class FrmAulas : Form
     {
         private int idAula = 0;
+        private bool editando = false;
 
         public FrmAulas()
         {
@@ -24,16 +25,30 @@ namespace ProyectoReservasAulas.Forms
         private void FrmAulas_Load(object sender, EventArgs e)
         {
             CargarAulas();
+            BloquearCampos();
+            btnGuardar.Enabled = false;
+            timer1.Start();
         }
 
-        // Metodos
+        // METODOS PRINCIPALES
+
         private void Limpiar()
         {
             txtCodigo.Clear();
             txtNombre.Clear();
-            nudCapacidad.Value = 1;
             txtBuscar.Clear();
+
+            nudCapacidad.Value = 1;
+
             idAula = 0;
+            editando = false;
+
+            txtCodigo.Enabled = false;
+            txtNombre.Enabled = false;
+            nudCapacidad.Enabled = false;
+
+            btnGuardar.Enabled = false;
+
             txtCodigo.Focus();
         }
 
@@ -101,81 +116,138 @@ namespace ProyectoReservasAulas.Forms
             dgvAulas.Columns["Id"].Visible = false;
         }
 
+        private void HabilitarCampos()
+        {
+            txtCodigo.Enabled = true;
+            txtNombre.Enabled = true;
+            nudCapacidad.Enabled = true;
+        }
 
-        // Botones
+        private void BloquearCampos()
+        {
+            txtCodigo.Enabled = false;
+            txtNombre.Enabled = false;
+            nudCapacidad.Enabled = false;
+        }
+
+        // BOTONES PRINCIPALES
+
         private void btnNuevo_Click(object sender, EventArgs e)
         {
+            txtCodigo.Clear();
+            txtNombre.Clear();
+
+            nudCapacidad.Value = 1;
+
+            idAula = 0;
+            editando = false;
+
+            HabilitarCampos();
+
+            btnGuardar.Enabled = true;
+
+            txtCodigo.Focus();
+        }
+
+        private void btnGuardar_Click(object sender, EventArgs e)
+        {
             if (!Validar())
+            {
                 return;
+            }
 
             using (ControlReservasContext db = new ControlReservasContext())
             {
-                // Verificar si el código ya existe
-                bool existe = db.Aulas.Any(a => a.Codigo == txtCodigo.Text.Trim());
-
-                if (existe)
+                if (!editando)
                 {
+                    // Verificar si el código ya existe
+                    bool existe = db.Aulas.Any(
+                        a => a.Codigo == txtCodigo.Text.Trim());
+
+                    if (existe)
+                    {
+                        MessageBox.Show(
+                            "Ya existe un aula con ese código.",
+                            "Aviso",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+
+                        txtCodigo.Focus();
+
+                        return;
+                    }
+
+                    // Crear una nueva aula
+                    Aula aula = new Aula();
+
+                    aula.Codigo = txtCodigo.Text.Trim();
+                    aula.Nombre = txtNombre.Text.Trim();
+                    aula.Capacidad = (int)nudCapacidad.Value;
+
+                    // Agregar el aula
+                    db.Aulas.Add(aula);
+
+                    // Guardar en SQL Server
+                    db.SaveChanges();
+
                     MessageBox.Show(
-                        "Ya existe un aula con ese código.",
-                        "Aviso",
+                        "Aula registrada correctamente.",
+                        "Información",
                         MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                        MessageBoxIcon.Information);
+                }
+                else
+                {
+                    // Verificar que no exista otro aula con ese código
+                    bool existe = db.Aulas.Any(
+                        a => a.Codigo == txtCodigo.Text.Trim()
+                        && a.Id != idAula);
 
-                    txtCodigo.Focus();
+                    if (existe)
+                    {
+                        MessageBox.Show(
+                            "Ya existe otra aula con ese código.",
+                            "Aviso",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
 
-                    return;
+                        txtCodigo.Focus();
+
+                        return;
+                    }
+
+                    // Buscar el aula que estamos editando
+                    Aula? aula = db.Aulas.Find(idAula);
+
+                    if (aula == null)
+                    {
+                        MessageBox.Show(
+                            "No se encontró el aula.",
+                            "Error",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+
+                        return;
+                    }
+
+                    // Modificar los datos
+                    aula.Codigo = txtCodigo.Text.Trim();
+                    aula.Nombre = txtNombre.Text.Trim();
+                    aula.Capacidad = (int)nudCapacidad.Value;
+
+                    // Guardar los cambios
+                    db.SaveChanges();
+
+                    MessageBox.Show(
+                        "Aula modificada correctamente.",
+                        "Información",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
                 }
 
-                Aula aula = new Aula();
-
-                aula.Codigo = txtCodigo.Text.Trim();
-
-                aula.Nombre = txtNombre.Text.Trim();
-
-                aula.Capacidad = (int)nudCapacidad.Value;
-
-                db.Aulas.Add(aula);
-
-                db.SaveChanges();
-
-                MessageBox.Show(
-                    "Aula registrada correctamente.",
-                    "Información",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-
                 CargarAulas();
-
                 Limpiar();
             }
-        }
-
-        private void btnBuscar_Click(object sender, EventArgs e)
-        {
-            using (ControlReservasContext db = new ControlReservasContext())
-            {
-                string texto = txtBuscar.Text.Trim();
-
-                dgvAulas.DataSource = db.Aulas
-                    .Where(a =>
-                        a.Codigo.Contains(texto) ||
-                        a.Nombre.Contains(texto))
-                    .Select(a => new
-                    {
-                        a.Id,
-                        a.Codigo,
-                        a.Nombre,
-                        a.Capacidad
-                    })
-                    .ToList();
-            }
-
-            dgvAulas.Columns["Id"].Visible = false;
-        }
-
-        private void btnSalir_Click(object sender, EventArgs e)
-        {
-            Close();
         }
 
         private void btnEditar_Click(object sender, EventArgs e)
@@ -191,50 +263,13 @@ namespace ProyectoReservasAulas.Forms
                 return;
             }
 
-            if (!Validar())
-                return;
+            editando = true;
 
-            using (ControlReservasContext db = new ControlReservasContext())
-            {
-                bool existe = db.Aulas.Any(a =>
-                    a.Codigo == txtCodigo.Text.Trim() &&
-                    a.Id != idAula);
+            HabilitarCampos();
 
-                if (existe)
-                {
-                    MessageBox.Show(
-                        "Ya existe otra aula con ese código.",
-                        "Aviso",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+            btnGuardar.Enabled = true;
 
-                    txtCodigo.Focus();
-                    return;
-                }
-
-                Aula? aula = db.Aulas.Find(idAula);
-
-                if (aula == null)
-                {
-                    MessageBox.Show("No se encontró el aula.");
-                    return;
-                }
-
-                aula.Codigo = txtCodigo.Text.Trim();
-                aula.Nombre = txtNombre.Text.Trim();
-                aula.Capacidad = (int)nudCapacidad.Value;
-
-                db.SaveChanges();
-
-                MessageBox.Show(
-                    "Aula modificada correctamente.",
-                    "Información",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-
-                CargarAulas();
-                Limpiar();
-            }
+            txtCodigo.Focus();
         }
 
         private void btnEliminar_Click(object sender, EventArgs e)
@@ -285,9 +320,43 @@ namespace ProyectoReservasAulas.Forms
             }
         }
 
+        private void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            Limpiar();
+        }
 
+        private void btnSalir_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
 
-        // Vista de aulas
+        // VISTA DE AULAS
+
+        private void txtBuscar_TextChanged(object sender, EventArgs e)
+        {
+            //btnBuscar.PerformClick();
+
+            using (ControlReservasContext db = new ControlReservasContext())
+            {
+                string texto = txtBuscar.Text.Trim();
+
+                dgvAulas.DataSource = db.Aulas
+                    .Where(a =>
+                        a.Codigo.Contains(texto) ||
+                        a.Nombre.Contains(texto))
+                    .Select(a => new
+                    {
+                        a.Id,
+                        a.Codigo,
+                        a.Nombre,
+                        a.Capacidad
+                    })
+                    .ToList();
+            }
+
+            dgvAulas.Columns["Id"].Visible = false;
+        }
+
         private void dgvAulas_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0)
@@ -298,15 +367,25 @@ namespace ProyectoReservasAulas.Forms
             idAula = Convert.ToInt32(fila.Cells["Id"].Value);
 
             txtCodigo.Text = fila.Cells["Codigo"].Value.ToString();
-
             txtNombre.Text = fila.Cells["Nombre"].Value.ToString();
 
             nudCapacidad.Value = Convert.ToDecimal(fila.Cells["Capacidad"].Value);
+
+            // No estamos editando todavía
+            editando = false;
+
+            // Los campos solamente sirven para visualizar
+            BloquearCampos();
+
+            // Guardar se activa únicamente al presionar Editar
+            btnGuardar.Enabled = false;
         }
 
-        private void txtBuscar_TextChanged(object sender, EventArgs e)
+        private void timer1_Tick(object sender, EventArgs e)
         {
-            btnBuscar.PerformClick();
+            lblFecha.Text = "Fecha: " + DateTime.Now.ToString("dd/MM/yyyy");
+
+            lblHora.Text = "Hora: " + DateTime.Now.ToString("hh:mm:ss tt");
         }
     }
 }

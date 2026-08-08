@@ -20,7 +20,7 @@ namespace ProyectoReservasAulas.Data
             {
                 optionsBuilder.UseSqlServer(
                     @"Server=DESKTOP-E9V3MBP\SQLEXPRESS;
-                      Database=ControlReservasDB;
+                      Database=ProyectoReservasDB;
                       Trusted_Connection=True;
                       TrustServerCertificate=True;");
             }

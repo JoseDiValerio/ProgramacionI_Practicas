@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace ProyectoReservasAulas.Models
 {
-    //internal class Class2
-    //{
-    //}
-
+    [Table("Profesor")]
     public class Profesor
     {
         [Key]
@@ -17,6 +15,10 @@ namespace ProyectoReservasAulas.Models
         [Required]
         [StringLength(100)]
         public string Nombre { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(100)]
+        public string Materia { get; set; } = string.Empty;
 
         [Required]
         [StringLength(100)]
