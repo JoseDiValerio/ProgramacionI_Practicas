@@ -39,6 +39,9 @@ namespace ProyectoReservasAulas.Forms
 
         private bool Validar()
         {
+            txtCodigo.Text = txtCodigo.Text.Trim();
+            txtNombre.Text = txtNombre.Text.Trim();
+
             if (string.IsNullOrWhiteSpace(txtCodigo.Text))
             {
                 MessageBox.Show(
@@ -97,6 +100,7 @@ namespace ProyectoReservasAulas.Forms
 
             dgvAulas.Columns["Id"].Visible = false;
         }
+
 
         // Botones
         private void btnNuevo_Click(object sender, EventArgs e)
@@ -174,6 +178,116 @@ namespace ProyectoReservasAulas.Forms
             Close();
         }
 
+        private void btnEditar_Click(object sender, EventArgs e)
+        {
+            if (idAula == 0)
+            {
+                MessageBox.Show(
+                    "Seleccione un aula para editar.",
+                    "Aviso",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                return;
+            }
+
+            if (!Validar())
+                return;
+
+            using (ControlReservasContext db = new ControlReservasContext())
+            {
+                bool existe = db.Aulas.Any(a =>
+                    a.Codigo == txtCodigo.Text.Trim() &&
+                    a.Id != idAula);
+
+                if (existe)
+                {
+                    MessageBox.Show(
+                        "Ya existe otra aula con ese código.",
+                        "Aviso",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
+                    txtCodigo.Focus();
+                    return;
+                }
+
+                Aula? aula = db.Aulas.Find(idAula);
+
+                if (aula == null)
+                {
+                    MessageBox.Show("No se encontró el aula.");
+                    return;
+                }
+
+                aula.Codigo = txtCodigo.Text.Trim();
+                aula.Nombre = txtNombre.Text.Trim();
+                aula.Capacidad = (int)nudCapacidad.Value;
+
+                db.SaveChanges();
+
+                MessageBox.Show(
+                    "Aula modificada correctamente.",
+                    "Información",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+                CargarAulas();
+                Limpiar();
+            }
+        }
+
+        private void btnEliminar_Click(object sender, EventArgs e)
+        {
+            if (idAula == 0)
+            {
+                MessageBox.Show(
+                    "Seleccione un aula.",
+                    "Aviso",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                return;
+            }
+
+            DialogResult respuesta = MessageBox.Show(
+                "¿Desea eliminar esta aula?",
+                "Confirmación",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (respuesta == DialogResult.No)
+                return;
+
+            using (ControlReservasContext db = new ControlReservasContext())
+            {
+                Aula? aula = db.Aulas.Find(idAula);
+
+                if (aula == null)
+                {
+                    MessageBox.Show("No se encontró el aula.");
+                    return;
+                }
+
+                db.Aulas.Remove(aula);
+
+                db.SaveChanges();
+
+                MessageBox.Show(
+                    "Aula eliminada correctamente.",
+                    "Información",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+                CargarAulas();
+
+                Limpiar();
+            }
+        }
+
+
+
+        // Vista de aulas
         private void dgvAulas_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0)
@@ -188,6 +302,11 @@ namespace ProyectoReservasAulas.Forms
             txtNombre.Text = fila.Cells["Nombre"].Value.ToString();
 
             nudCapacidad.Value = Convert.ToDecimal(fila.Cells["Capacidad"].Value);
+        }
+
+        private void txtBuscar_TextChanged(object sender, EventArgs e)
+        {
+            btnBuscar.PerformClick();
         }
     }
 }

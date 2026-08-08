@@ -113,6 +113,7 @@
             txtBuscar.Name = "txtBuscar";
             txtBuscar.Size = new Size(100, 23);
             txtBuscar.TabIndex = 7;
+            txtBuscar.TextChanged += txtBuscar_TextChanged;
             // 
             // btnBuscar
             // 
@@ -151,6 +152,7 @@
             btnEditar.TabIndex = 11;
             btnEditar.Text = "Editar";
             btnEditar.UseVisualStyleBackColor = true;
+            btnEditar.Click += btnEditar_Click;
             // 
             // btnEliminar
             // 
@@ -160,6 +162,7 @@
             btnEliminar.TabIndex = 12;
             btnEliminar.Text = "Eliminar";
             btnEliminar.UseVisualStyleBackColor = true;
+            btnEliminar.Click += btnEliminar_Click;
             // 
             // btnSalir
             // 
