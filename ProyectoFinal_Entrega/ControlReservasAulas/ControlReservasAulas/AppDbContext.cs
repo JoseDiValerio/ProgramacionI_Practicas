@@ -10,7 +10,7 @@ public class AppDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlServer(
-            "Server=localhost;Database=ControlReservasAulas;Trusted_Connection=True;TrustServerCertificate=True;"
+            "Server=DESKTOP-E9V3MBP\\SQLEXPRESS;Database=ControlReservasAulas;Trusted_Connection=True;TrustServerCertificate=True;"
         );
     }
 }
