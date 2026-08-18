@@ -1,13 +1,58 @@
 ﻿using ControlReservasAulas;
 
-using (AppDbContext db = new AppDbContext())
+int opcion;
+
+do
 {
-    if (db.Database.CanConnect())
+    Console.Clear();
+
+    Console.WriteLine("=================================");
+    Console.WriteLine("   CONTROL DE RESERVAS DE AULAS  ");
+    Console.WriteLine("=================================");
+    Console.WriteLine("1. Registrar aula");
+    Console.WriteLine("2. Registrar profesor");
+    Console.WriteLine("3. Registrar reserva");
+    Console.WriteLine("4. Mostrar información");
+    Console.WriteLine("5. Modificar información");
+    Console.WriteLine("6. Eliminar información");
+    Console.WriteLine("7. Salir");
+    Console.Write("Seleccione una opción: ");
+
+    int.TryParse(Console.ReadLine(), out opcion);
+
+    switch (opcion)
     {
-        Console.WriteLine("Conexión correcta con SQL Server.");
+        case 1:
+            Aulas.Registrar();
+            break;
+
+        case 2:
+            Profesores.Registrar();
+            break;
+
+        case 3:
+            Reservas.Registrar();
+            break;
+
+        case 4:
+            // Menú mostrar
+            break;
+
+        case 5:
+            // Menú modificar
+            break;
+
+        case 6:
+            // Menú eliminar
+            break;
+
+        case 7:
+            Console.WriteLine("Saliendo de la aplicacion.");
+            break;
+
+        default:
+            Console.WriteLine("Opción inválida.");
+            Console.ReadKey();
+            break;
     }
-    else
-    {
-        Console.WriteLine("No se pudo conectar con SQL Server.");
-    }
-}
+} while (opcion != 7);
