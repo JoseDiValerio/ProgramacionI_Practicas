@@ -1,5 +1,17 @@
 ﻿using ControlReservasAulas;
 
+var db = new Conexion();
+
+if (db.Database.CanConnect())
+{
+    Console.WriteLine("¡Conexión exitosa! Todo está bien configurado.");
+}
+else
+{
+    Console.WriteLine("Error: No se pudo conectar a la base de datos.");
+}
+Console.ReadKey();
+
 int opcion;
 
 do
@@ -9,14 +21,14 @@ do
     Console.WriteLine("=================================");
     Console.WriteLine("   CONTROL DE RESERVAS DE AULAS  ");
     Console.WriteLine("=================================");
-    Console.WriteLine("1. Registrar aula");
+    Console.WriteLine("\n1. Registrar aula");
     Console.WriteLine("2. Registrar profesor");
     Console.WriteLine("3. Registrar reserva");
     Console.WriteLine("4. Mostrar información");
     Console.WriteLine("5. Modificar información");
     Console.WriteLine("6. Eliminar información");
     Console.WriteLine("7. Salir");
-    Console.Write("Seleccione una opción: ");
+    Console.Write("\nSeleccione una opción: ");
 
     int.TryParse(Console.ReadLine(), out opcion);
 
@@ -27,11 +39,11 @@ do
             break;
 
         case 2:
-            Profesores.Registrar();
+            //Profesores.Registrar();
             break;
 
         case 3:
-            Reservas.Registrar();
+            //Reservas.Registrar();
             break;
 
         case 4:

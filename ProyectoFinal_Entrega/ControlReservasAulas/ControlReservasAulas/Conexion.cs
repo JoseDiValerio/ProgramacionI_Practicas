@@ -2,7 +2,7 @@
 
 namespace ControlReservasAulas;
 
-public class AppDbContext : DbContext
+public class Conexion : DbContext
 {
     public DbSet<Aula> Aulas { get; set; }
     public DbSet<Profesor> Profesores { get; set; }
