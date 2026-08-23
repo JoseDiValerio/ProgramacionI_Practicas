@@ -1,6 +1,5 @@
 ﻿using ProyectoRegistroAulas.Datos.Modelos;
 using Microsoft.EntityFrameworkCore;
-using ProyectoRegistroAulas.Datos.Modelos;
 
 namespace ProyectoRegistroAulas.Datos;
 
