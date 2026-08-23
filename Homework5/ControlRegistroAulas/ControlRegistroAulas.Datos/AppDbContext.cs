@@ -11,6 +11,6 @@ public class AppDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer(@"Server=DESKTOP-E9V3MBP\SQLEXPRESS;Database=ControlRegistroAulas;Trusted_Connection=True;TrustServerCertificate=True;");
+        optionsBuilder.UseSqlServer(@"Server=.\SQLEXPRESS;Database=ControlRegistroAulas;Trusted_Connection=True;TrustServerCertificate=True;");
     }
 }

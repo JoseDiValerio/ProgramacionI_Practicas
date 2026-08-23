@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="ProyectoRegistroAulas.Datos/ProyectoRegistroAulas.Datos.csproj" />
+  <Project Path="ProyectoRegistroAulas.Negocio/ProyectoRegistroAulas.Negocio.csproj" />
+  <Project Path="ProyectoRegistroAulas/ProyectoRegistroAulas.Presentacion.csproj" />
+</Solution>
