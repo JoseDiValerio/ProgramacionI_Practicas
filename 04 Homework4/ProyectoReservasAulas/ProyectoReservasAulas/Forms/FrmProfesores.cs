@@ -160,21 +160,7 @@ namespace ProyectoReservasAulas.Forms
             {
                 if (!editando)
                 {
-                    bool existe = db.Profesores.Any(
-                        p => p.Correo == txtCorreo.Text.Trim());
-
-                    if (existe)
-                    {
-                        MessageBox.Show(
-                            "Ya existe un profesor con ese correo.",
-                            "Aviso",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning);
-
-                        txtCorreo.Focus();
-
-                        return;
-                    }
+                    // Crear un nuevo profesor
 
                     Profesor profesor = new Profesor();
                     profesor.Nombre = txtNombre.Text.Trim();
@@ -191,22 +177,7 @@ namespace ProyectoReservasAulas.Forms
                 }
                 else
                 {
-                    bool existe = db.Profesores.Any(
-                        p => p.Correo == txtCorreo.Text.Trim()
-                        && p.Id != idProfesor);
-
-                    if (existe)
-                    {
-                        MessageBox.Show(
-                            "Ya existe otro profesor con ese correo.",
-                            "Aviso",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning);
-
-                        txtCorreo.Focus();
-
-                        return;
-                    }
+                    // Buscar el profesor que estamos editando
 
                     Profesor? profesor = db.Profesores.Find(idProfesor);
 
@@ -221,6 +192,8 @@ namespace ProyectoReservasAulas.Forms
                         return;
                     }
 
+                    // Modificar los datos
+
                     profesor.Nombre = txtNombre.Text.Trim();
                     profesor.Materia = txtMateria.Text.Trim();
                     profesor.Correo = txtCorreo.Text.Trim();
@@ -234,7 +207,6 @@ namespace ProyectoReservasAulas.Forms
                 }
 
                 CargarProfesores();
-
                 Limpiar();
             }
         }
@@ -266,7 +238,7 @@ namespace ProyectoReservasAulas.Forms
             if (idProfesor == 0)
             {
                 MessageBox.Show(
-                    "Seleccione un profesor.",
+                    "Debe seleccionar un profesor.",
                     "Aviso",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
@@ -274,46 +246,50 @@ namespace ProyectoReservasAulas.Forms
                 return;
             }
 
-            DialogResult respuesta = MessageBox.Show(
-                "¿Desea eliminar este profesor?",
-                "Confirmación",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
-
-            if (respuesta == DialogResult.No)
-            {
-                return;
-            }
-
             using (ControlReservasContext db = new ControlReservasContext())
             {
-                Profesor? profesor = db.Profesores.Find(idProfesor);
+                bool tieneReservas = db.Reservas
+                    .Any(r => r.ProfesorId == idProfesor);
 
-                if (profesor == null)
+                if (tieneReservas)
                 {
                     MessageBox.Show(
-                        "No se encontró el profesor.",
-                        "Error",
+                        "No se puede eliminar el profesor porque tiene reservas registradas.",
+                        "Aviso",
                         MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
+                        MessageBoxIcon.Warning);
 
                     return;
                 }
 
-                db.Profesores.Remove(profesor);
+                DialogResult respuesta = MessageBox.Show(
+                    "¿Está seguro de que desea eliminar este profesor?",
+                    "Confirmar eliminación",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
 
-                db.SaveChanges();
+                if (respuesta == DialogResult.No)
+                {
+                    return;
+                }
 
-                MessageBox.Show(
-                    "Profesor eliminado correctamente.",
-                    "Información",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                Profesor profesor = db.Profesores.Find(idProfesor);
 
-                CargarProfesores();
+                if (profesor != null)
+                {
+                    db.Profesores.Remove(profesor);
+                    db.SaveChanges();
 
-                Limpiar();
+                    MessageBox.Show(
+                        "Profesor eliminado correctamente.",
+                        "Información",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
             }
+
+            CargarProfesores();
+            Limpiar();
         }
 
         private void btnLimpiar_Click(object sender, EventArgs e)

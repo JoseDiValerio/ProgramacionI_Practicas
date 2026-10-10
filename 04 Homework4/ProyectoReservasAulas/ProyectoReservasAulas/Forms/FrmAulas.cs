@@ -169,6 +169,23 @@ namespace ProyectoReservasAulas.Forms
                         return;
                     }
 
+                    // Verificar si el nombre ya existe
+                    bool existeNombre = db.Aulas.Any(
+                        a => a.Nombre.ToLower() == txtNombre.Text.Trim().ToLower());
+
+                    if (existeNombre)
+                    {
+                        MessageBox.Show(
+                            "Ya existe un aula con ese nombre.",
+                            "Aviso",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+
+                        txtNombre.Focus();
+
+                        return;
+                    }
+
                     // Crear una nueva aula
                     Aula aula = new Aula();
 
@@ -190,7 +207,7 @@ namespace ProyectoReservasAulas.Forms
                 }
                 else
                 {
-                    // Verificar que no exista otro aula con ese código
+                    // Verificar que no exista otra aula con ese código
                     bool existe = db.Aulas.Any(
                         a => a.Codigo == txtCodigo.Text.Trim()
                         && a.Id != idAula);
@@ -204,6 +221,24 @@ namespace ProyectoReservasAulas.Forms
                             MessageBoxIcon.Warning);
 
                         txtCodigo.Focus();
+
+                        return;
+                    }
+
+                    // Verificar que no exista otra aula con ese nombre
+                    bool existeNombre = db.Aulas.Any(
+                        a => a.Nombre.ToLower() == txtNombre.Text.Trim().ToLower()
+                        && a.Id != idAula);
+
+                    if (existeNombre)
+                    {
+                        MessageBox.Show(
+                            "Ya existe otra aula con ese nombre.",
+                            "Aviso",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+
+                        txtNombre.Focus();
 
                         return;
                     }
@@ -269,7 +304,7 @@ namespace ProyectoReservasAulas.Forms
             if (idAula == 0)
             {
                 MessageBox.Show(
-                    "Seleccione un aula.",
+                    "Debe seleccionar un aula.",
                     "Aviso",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
@@ -277,39 +312,50 @@ namespace ProyectoReservasAulas.Forms
                 return;
             }
 
-            DialogResult respuesta = MessageBox.Show(
-                "¿Desea eliminar esta aula?",
-                "Confirmación",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
-
-            if (respuesta == DialogResult.No)
-                return;
-
             using (ControlReservasContext db = new ControlReservasContext())
             {
-                Aula? aula = db.Aulas.Find(idAula);
+                bool tieneReservas = db.Reservas
+                    .Any(r => r.AulaId == idAula);
 
-                if (aula == null)
+                if (tieneReservas)
                 {
-                    MessageBox.Show("No se encontró el aula.");
+                    MessageBox.Show(
+                        "No se puede eliminar el aula porque tiene reservas registradas.",
+                        "Aviso",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
                     return;
                 }
 
-                db.Aulas.Remove(aula);
+                DialogResult respuesta = MessageBox.Show(
+                    "¿Está seguro de que desea eliminar esta aula?",
+                    "Confirmar eliminación",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
 
-                db.SaveChanges();
+                if (respuesta == DialogResult.No)
+                {
+                    return;
+                }
 
-                MessageBox.Show(
-                    "Aula eliminada correctamente.",
-                    "Información",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                Aula aula = db.Aulas.Find(idAula);
 
-                CargarAulas();
+                if (aula != null)
+                {
+                    db.Aulas.Remove(aula);
+                    db.SaveChanges();
 
-                Limpiar();
+                    MessageBox.Show(
+                        "Aula eliminada correctamente.",
+                        "Información",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
             }
+
+            CargarAulas();
+            Limpiar();
         }
 
         private void btnLimpiar_Click(object sender, EventArgs e)
